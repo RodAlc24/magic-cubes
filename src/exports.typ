@@ -4,4 +4,5 @@
 #import "render.typ": draw_cube, draw_flat
 #import "moves.typ": rotate_layer
 #import "parser.typ": parse
+#import "presets.typ": f2l-cube, oll-cube
 
