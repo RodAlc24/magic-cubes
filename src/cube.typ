@@ -1,121 +1,90 @@
 #import "deps.typ" as e: field, types
 
-#let cube-colors = e.types.declare(
-  "cube-colors",
-  doc: "Defines the colors of a cube",
-  prefix: "@preview/magic-cubes,v1",
-  fields: (
-    field("f", color, doc: "Front face color", default: red),
-    field("r", color, doc: "Right face color", default: blue),
-    field("u", color, doc: "Up face color", default: white),
-    field("b", color, doc: "Back face color", default: orange),
-    field("l", color, doc: "Left face color", default: green),
-    field("d", color, doc: "Down face color", default: yellow),
-  ),
-  casts: ((from: dictionary),),
+#let faces = ("f", "r", "u", "b", "l", "d")
+#let default-colors = (
+  f: red,
+  r: blue,
+  u: white,
+  b: orange,
+  l: green,
+  d: yellow,
 )
 
-#let cube = e.types.declare(
-  "cube",
-  doc: "Represents a cube",
-  prefix: "@preview/magic-cubes,v1",
-  fields: (
-    field("size", int, doc: "The dimension of the cube", default: 3),
-    field(
-      "f",
-      types.array(color),
-      doc: "Front face",
-    ),
-    field(
-      "r",
-      types.array(color),
-      doc: "Right face",
-    ),
-    field(
-      "u",
-      types.array(color),
-      doc: "Up face",
-    ),
-    field(
-      "b",
-      types.array(color),
-      doc: "Back face",
-    ),
-    field(
-      "l",
-      types.array(color),
-      doc: "Left face",
-    ),
-    field(
-      "d",
-      types.array(color),
-      doc: "Down face",
-    ),
-  ),
-  construct: constructor => (
-    size: 3,
-    colors: cube-colors(),
-    f: none,
-    r: none,
-    u: none,
-    b: none,
-    l: none,
-    d: none,
-  ) => {
-    let obj = constructor(size: size)
-    colors = types.cast(colors, cube-colors)
+#let cube(
+  size: 3,
+  colors: default-colors,
+  state: auto,
+) = {
+  assert(
+    type(size) == int and size > 0,
+    message: "Argument error: size must be a positive integer",
+  )
+  assert(
+    type(colors) == dictionary,
+    message: "Argument error: colors must be a dictionary",
+  )
 
-    assert(colors.at(0), message: "colors must be a cube-colors dict")
-    colors = colors.at(1)
+  for elem in colors {
+    assert(
+      elem.first() in faces,
+      message: "Key error: " + elem.first() + " is not a valid key",
+    )
+    assert(
+      type(elem.last()) == color,
+      message: "Argument error: colors must be a dictionary of colors",
+    )
+  }
 
-    if (f != none) {
-      assert(
-        f.len() == size * size,
-        message: "The length of colors.f must be " + str(size * size),
-      )
-    } else {
-      f = size * size * (colors.f,)
+  for elem in faces {
+    if not elem in colors {
+      colors.insert(elem, default-colors.at(elem))
     }
-    if (u != none) {
+  }
+
+  if state != auto {
+    assert(
+      type(state) == dictionary,
+      message: "Argument error: state must be a dictionary",
+    )
+    for face in state {
       assert(
-        u.len() == size * size,
-        message: "The length of colors.u must be " + str(size * size),
+        face.first() in faces,
+        message: "Key error: " + face.first() + " is not a valid key",
       )
-    } else {
-      u = size * size * (colors.u,)
-    }
-    if (r != none) {
       assert(
-        r.len() == size * size,
-        message: "The length of colors.r must be " + str(size * size),
+        type(face.last()) == array,
+        message: "Value error: state values must be arrays",
       )
-    } else {
-      r = size * size * (colors.r,)
-    }
-    if (b != none) {
       assert(
-        b.len() == size * size,
-        message: "The length of colors.b must be " + str(size * size),
+        face.last().len() == size * size,
+        message: "Length error: length of state values must be "
+          + str(size * size),
       )
-    } else {
-      b = size * size * (colors.b,)
+      for elem in face.last() {
+        assert(
+          type(elem) == color,
+          message: "Value error: state values must be arrays of colors",
+        )
+      }
     }
-    if (l != none) {
-      assert(
-        l.len() == size * size,
-        message: "The length of colors.l must be " + str(size * size),
-      )
-    } else {
-      l = size * size * (colors.l,)
+  } else {
+    state = (:)
+  }
+
+  for elem in faces {
+    if elem not in state {
+      state.insert(elem, size * size * (colors.at(elem),))
     }
-    if (d != none) {
-      assert(
-        d.len() == size * size,
-        message: "The length of colors.d must be " + str(size * size),
-      )
-    } else {
-      d = size * size * (colors.d,)
-    }
-    return constructor(size: size, f: f, r: r, u: u, l: l, b: b, d: d)
-  },
-)
+  }
+
+  return (
+    size: size,
+    f: state.f,
+    r: state.r,
+    u: state.u,
+    b: state.b,
+    l: state.l,
+    d: state.d,
+  )
+}
+
