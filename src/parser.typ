@@ -1,4 +1,4 @@
-#import "moves.typ": rotate_layer
+#import "moves.typ": rotate_cube, rotate_layer
 
 #let parse(alg) = {
   let a = alg.split(" ")
@@ -62,14 +62,25 @@
   return inverted
 }
 
-#let apply(cube, alg) = {
-  let list_alg = parse(alg)
+#let apply(
+  cube,
+  alg,
+  inverted: false,
+) = {
+  let list_alg = _parse(alg)
+  if inverted {
+    list_alg = _invert(list_alg)
+  }
 
   for move in list_alg {
-    if move in ("f", "r", "u", "b", "l", "d") {
+    if move.at(0) in ("f", "r", "u", "b", "l", "d") {
       cube = rotate_layer(cube, move.at(0), depth: move.at(1), n: move.at(2))
+    } else if move.at(0) in ("x", "y", "z") {
+      for i in range(move.at(2)) {
+        cube = rotate_cube(cube, move.at(0))
+      }
     } else {
-      assert(false, message: "Not yet implemented")
+      assert(false, message: "Not yet implemented" + move)
     }
   }
 
