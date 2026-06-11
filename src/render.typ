@@ -1,59 +1,64 @@
 #import "deps.typ": cetz
 
 #let draw_flat(cube) = {
-  cetz.canvas({
-    import cetz.draw: rect
+  let size = cube.size
+  cetz.canvas(
+    length: 3 / size * 20pt,
+    {
+      import cetz.draw: rect
 
-    let size = cube.size
-    let gap = 0.2
-    let k = 0.015
+      let gap = size / 3 * 0.2
+      let k = 0.015
+      k = 0
 
-    for i in range(size) {
-      for j in range(size) {
-        rect(
-          (j + k, size - i - k),
-          (j + 1 - k, size - i - 1 + k),
-          fill: cube.f.at(i * size + j),
-          stroke: 0.3mm,
-        )
-        rect(
-          (size + gap + j + k, size - i - k),
-          (size + gap + j + 1 - k, size - i - 1 + k),
-          fill: cube.r.at(i * size + j),
-          stroke: 0.3mm,
-        )
-        rect(
-          (j + k, size + gap + size - i - k),
-          (j + 1 - k, size + gap + size - i - 1 + k),
-          fill: cube.u.at(i * size + j),
-          stroke: 0.3mm,
-        )
-        rect(
-          (2 * (size + gap) + j + k, size - i - k),
-          (2 * (size + gap) + j + 1 - k, size - i - 1 + k),
-          fill: cube.b.at(i * size + j),
-          stroke: 0.3mm,
-        )
-        rect(
-          (-size - gap + j + k, size - i - k),
-          (-size - gap + j + 1 - k, size - i - 1 + k),
-          fill: cube.l.at(i * size + j),
-          stroke: 0.3mm,
-        )
-        rect(
-          (j + k, -size - gap + size - i - k),
-          (j + 1 - k, -size - gap + size - i - 1 + k),
-          fill: cube.d.at(i * size + j),
-          stroke: 0.3mm,
-        )
+      for i in range(size) {
+        for j in range(size) {
+          rect(
+            (j + k, size - i - k),
+            (j + 1 - k, size - i - 1 + k),
+            fill: cube.f.at(i * size + j),
+            stroke: 0.3mm,
+          )
+          rect(
+            (size + gap + j + k, size - i - k),
+            (size + gap + j + 1 - k, size - i - 1 + k),
+            fill: cube.r.at(i * size + j),
+            stroke: 0.3mm,
+          )
+          rect(
+            (j + k, size + gap + size - i - k),
+            (j + 1 - k, size + gap + size - i - 1 + k),
+            fill: cube.u.at(i * size + j),
+            stroke: 0.3mm,
+          )
+          rect(
+            (2 * (size + gap) + j + k, size - i - k),
+            (2 * (size + gap) + j + 1 - k, size - i - 1 + k),
+            fill: cube.b.at(i * size + j),
+            stroke: 0.3mm,
+          )
+          rect(
+            (-size - gap + j + k, size - i - k),
+            (-size - gap + j + 1 - k, size - i - 1 + k),
+            fill: cube.l.at(i * size + j),
+            stroke: 0.3mm,
+          )
+          rect(
+            (j + k, -size - gap + size - i - k),
+            (j + 1 - k, -size - gap + size - i - 1 + k),
+            fill: cube.d.at(i * size + j),
+            stroke: 0.3mm,
+          )
+        }
       }
-    }
-  })
+    },
+  )
 }
 
-#let face(cube, index) = {
+#let _face(cube, index) = {
   let size = cube.size
   let k = 0.015
+  k = 0
   for i in range(size) {
     for j in range(size) {
       let l = if index in ("f", "l", "d") {
@@ -65,8 +70,8 @@
       }
 
       cetz.draw.rect(
-        (j + k, size - i - k),
-        (j + 1 - k, size - i - 1 + k),
+        (j + k - size / 2, size / 2 - i - k),
+        (j + 1 - k - size / 2, size / 2 - i - 1 + k),
         fill: cube.at(index).at(l),
         stroke: 0.3mm,
       )
@@ -74,36 +79,46 @@
   }
 }
 
-#let draw_cube(cube, x: 35.264deg, y: 45deg, z: 0deg) = {
-  cetz.canvas({
-    import cetz.draw: *
+#let draw_cube(
+  cube,
 
-    let size = cube.size
+  x: 35.264deg,
 
-    ortho(x: x, y: y, z: z, {
-      on-xy(z: size, {
-        face(cube, "f")
+  y: 45deg,
+
+  z: 0deg,
+) = {
+  let size = cube.size
+  cetz.canvas(
+    length: 3 / size * 28.35pt,
+    {
+      import cetz.draw: *
+
+      ortho(x: x, y: y, z: z, {
+        on-xy(z: size / 2, {
+          _face(cube, "f")
+        })
+
+        on-zy(x: size / 2, {
+          _face(cube, "r")
+        })
+
+        on-xz(y: size / 2, {
+          _face(cube, "u")
+        })
+
+        on-xy(z: -size / 2, {
+          _face(cube, "b")
+        })
+
+        on-zy(x: -size / 2, {
+          _face(cube, "l")
+        })
+
+        on-xz(y: -size / 2, {
+          _face(cube, "d")
+        })
       })
-
-      on-zy(x: size, {
-        face(cube, "r")
-      })
-
-      on-xz(y: size, {
-        face(cube, "u")
-      })
-
-      on-xy({
-        face(cube, "b")
-      })
-
-      on-zy({
-        face(cube, "l")
-      })
-
-      on-xz({
-        face(cube, "d")
-      })
-    })
-  })
+    },
+  )
 }
