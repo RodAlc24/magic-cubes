@@ -15,7 +15,7 @@
   cube.at(face) = cube
     .at(face)
     .enumerate()
-    .map(i => cube.at(face).at(rotate_piece(i.at(0), cube.size, n: n)))
+    .map(i => cube.at(face).at(_rotate_piece(i.at(0), cube.size, n: n)))
 
   return cube
 }
@@ -52,7 +52,7 @@
   )
 
   for i in prepare.at(index).pairs() {
-    cube = rotate_face(cube, i.first(), n: i.last())
+    cube = _rotate_face(cube, i.first(), n: i.last())
   }
 
   let copy = cube
@@ -66,13 +66,41 @@
 
   cube = copy
   for i in prepare.at(index).pairs() {
-    cube = rotate_face(cube, i.first(), n: -i.last())
+    cube = _rotate_face(cube, i.first(), n: -i.last())
   }
 
   if depth == 0 {
-    return rotate_face(cube, index, n: n)
+    return _rotate_face(cube, index, n: n)
   } else {
     return cube
   }
 }
 
+#let rotate_cube(cube, axis) = {
+  let copy = cube
+  if axis == "x" {
+    copy.f = cube.d
+    copy.r = _rotate_face(cube, "r", n: 1).r
+    copy.u = cube.f
+    copy.b = _rotate_face(cube, "u", n: 2).u
+    copy.l = _rotate_face(cube, "l", n: 3).l
+    copy.d = _rotate_face(cube, "b", n: 2).b
+  } else if axis == "y" {
+    copy.f = cube.r
+    copy.r = cube.b
+    copy.u = _rotate_face(cube, "u", n: 1).u
+    copy.b = cube.l
+    copy.l = cube.f
+    copy.d = _rotate_face(cube, "d", n: 3).d
+  } else if axis == "z" {
+    copy.f = _rotate_face(cube, "f", n: 1).f
+    copy.r = _rotate_face(cube, "u", n: 1).u
+    copy.u = _rotate_face(cube, "l", n: 1).l
+    copy.b = _rotate_face(cube, "b", n: 3).b
+    copy.l = _rotate_face(cube, "d", n: 1).d
+    copy.d = _rotate_face(cube, "r", n: 1).r
+  } else {
+    assert(false, "Argument error: Axis must be one of (\"x\", \"y\", \"z\")")
+  }
+  return copy
+}
