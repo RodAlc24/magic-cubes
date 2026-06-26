@@ -1,4 +1,15 @@
-#let rotate_piece = (i, size, n: 1) => {
+/// Returns for a given index the destination after a move.
+/// -> int
+#let _rotate_piece(
+  /// the index of the piece to move. -> int
+  i,
+
+  /// the size of the cube. -> int
+  size,
+
+  /// the number of rotations. -> int
+  n: 1,
+) = {
   let j = calc.rem(n + 4, 4)
   if j == 0 {
     return i
@@ -11,7 +22,16 @@
   }
 }
 
-#let rotate_face(cube, face, n: 1) = {
+/// rotates a given face. -> cube-t
+#let _rotate_face(
+  /// the cube. -> cube-t
+  cube,
+
+  /// the face to rotate, as a one-letter string -> srt
+  face,
+  /// the numer of times to rotate -> int
+  n: 1,
+) = {
   cube.at(face) = cube
     .at(face)
     .enumerate()

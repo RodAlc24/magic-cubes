@@ -1,6 +1,10 @@
 #import "deps.typ": cetz
 
-#let draw_flat(cube) = {
+/// Draws a flat cube.
+#let draw_flat(
+  /// The cube to draw. -> cube-t
+  cube,
+) = {
   let size = cube.size
   cetz.canvas(
     length: 3 / size * 20pt,
@@ -79,13 +83,18 @@
   }
 }
 
+/// Draws a cube
 #let draw_cube(
+  /// the cube to draw. -> cube-t
   cube,
 
+  /// the x angle. -> angle
   x: 35.264deg,
 
+  /// the y angle. -> angle
   y: 45deg,
 
+  /// the z angle. -> angle
   z: 0deg,
 ) = {
   let size = cube.size

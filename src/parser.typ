@@ -1,6 +1,10 @@
 #import "moves.typ": rotate_cube, rotate_layer
 
-#let parse(alg) = {
+/// Parses an algorithm and translates it to an alg-t dictionary. -> alg-t
+#let _parse(
+  /// The algorithm to parse. -> str
+  alg,
+) = {
   let a = alg.split(" ")
   let list_alg = ()
 
@@ -54,7 +58,11 @@
   return list_alg
 }
 
-#let invert(alg) = {
+/// Inverts an algorithm. -> alg-t
+#let _invert(
+  /// The algorithm to invert. -> alg-t
+  alg,
+) = {
   let inverted = ()
   for move in alg {
     inverted.insert(0, (move.at(0), move.at(1), 4 - move.at(2)))
@@ -62,9 +70,15 @@
   return inverted
 }
 
+/// Returns a new cube after applying the algorithm. -> cube-t
 #let apply(
+  /// The cube to apply the algorithm. -> cube-t
   cube,
+
+  /// The algorithm to apply. -> str
   alg,
+
+  /// Whether it should be applied in inverse order. -> bool
   inverted: false,
 ) = {
   let list_alg = _parse(alg)
