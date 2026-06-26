@@ -1,5 +1,3 @@
-#import "deps.typ" as e: field, types
-
 #let faces = ("f", "r", "u", "b", "l", "d")
 #let default-colors = (
   f: red,
