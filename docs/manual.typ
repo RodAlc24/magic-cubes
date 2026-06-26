@@ -1,4 +1,4 @@
-#import "@preview/mantys:1.0.2": *
+#import "@local/mantys:1.0.2": * // I have applied PR#35 locally
 #import "../src/exports.typ" as magic-cubes: *
 
 #set scale(reflow: true)
