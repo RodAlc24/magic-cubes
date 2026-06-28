@@ -51,7 +51,7 @@
         action = lower(move.at(-1))
         move = move.slice(0, -1)
         if move == "" {
-          n = 1
+          depth = 1
         } else {
           assert(
             move.match(regex("^\d+$")) != none,
