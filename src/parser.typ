@@ -4,6 +4,7 @@
 #let _parse(
   /// The algorithm to parse. -> str
   alg,
+  size,
 ) = {
   let a = alg.split(" ")
   let list_alg = ()
@@ -15,46 +16,89 @@
 
     if move.len() == 0 {
       continue
-    } else if move.len() == 1 {
-      n = 1
-      action = move.at(0)
-    } else if move.len() == 2 {
-      if move.at(1) == "'" {
+    } else {
+      // Search the end of the string for the orientation of the turn
+      if move.ends-with("'") {
         n = 3
-        action = move.at(0)
-      } else if move.at(1) == "2" {
+        move = move.slice(0, -1)
+      } else if move.ends-with("2") {
         n = 2
-        action = move.at(0)
+        move = move.slice(0, -1)
       } else {
         n = 1
-        depth = int(move.at(0))
-        action = move.at(1)
       }
-    } else if move.len() == 3 {
-      depth = int(move.at(0))
-      action = move.at(1)
 
-      if move.at(2) == "'" {
-        n = 3
-      } else if move.at(2) == "2" {
-        n = 2
+      // Central moves
+      if move in ("M", "E", "S") {
+        assert(
+          calc.rem(size, 2) == 1,
+          message: "Error: central moves can only be applied to odd size cubes",
+        )
+        let central = (
+          "M": "l",
+          "E": "d",
+          "S": "f",
+        )
+        action = central.at(move)
+        depth = calc.ceil(size / 2)
+
+        // Cube rotations
+      } else if move in ("x", "y", "z") {
+        action = move
+
+        // One layer rotation
+      } else if move.ends-with(regex("[FRUBLD]")) {
+        action = lower(move.at(-1))
+        move = move.slice(0, -1)
+        if move == "" {
+          n = 1
+        } else {
+          assert(
+            move.match(regex("^\d+$")) != none,
+            message: "Invalid syntax: before the move letter can only be an integer number.",
+          )
+          depth = int(move)
+        }
+
+        // Wide moves
       } else {
-        assert(false, message: "Invalid syntax: " + move)
-      }
-    } else {
-      assert(false, message: "Invalid syntax: " + move)
-    }
+        if move.ends-with(regex("[frubld]")) {
+          action = move.at(-1)
+          move = move.slice(0, -1)
+        } else if move.ends-with(regex("[FRUBLD]w")) {
+          action = lower(move.at(-2))
+          move = move.slice(0, -2)
+        } else {
+          assert(false, message: "Invalid syntax: " + move)
+        }
 
-    action = lower(action)
-    if (
-      action in ("f", "r", "u", "b", "l", "d", "x", "y", "z", "m", "e", "s")
-    ) {
+        let lower
+        let upper
+        if move == "" {
+          lower = 1
+          upper = calc.ceil(size / 2)
+        } else if move.match(regex("^\d+$")) != none {
+          lower = 1
+          upper = int(move)
+        } else if move.match(regex("^\d+-\d+$")) != none {
+          let capture = move.match(regex("^(\d+)-(\d+)$"))
+          lower = int(capture.captures.at(0))
+          upper = int(capture.captures.at(1))
+        } else {
+          assert(
+            false,
+            message: "Invalid syntax: wide moves must be preceded by an integer, two integers separated by a dash or none. Your input: "
+              + move,
+          )
+        }
+        for i in range(lower, upper) {
+          list_alg += ((action, i, n),)
+        }
+        depth = upper
+      }
       list_alg += ((action, depth, n),)
-    } else {
-      assert(false, message: "Invalid syntax: " + move)
     }
   }
-
   return list_alg
 }
 
@@ -81,7 +125,7 @@
   /// Whether it should be applied in inverse order. -> bool
   inverted: false,
 ) = {
-  let list_alg = _parse(alg)
+  let list_alg = _parse(alg, cube.size)
   if inverted {
     list_alg = _invert(list_alg)
   }
@@ -94,7 +138,7 @@
         cube = rotate_cube(cube, move.at(0))
       }
     } else {
-      assert(false, message: "Not yet implemented" + move)
+      assert(false, message: "Invalid move: " + move)
     }
   }
 
