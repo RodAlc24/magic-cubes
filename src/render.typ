@@ -4,10 +4,11 @@
 #let draw_flat(
   /// The cube to draw. -> cube-t
   cube,
+  length: 20pt,
 ) = {
   let size = cube.size
   cetz.canvas(
-    length: 3 / size * 20pt,
+    length: 3 / size * length,
     {
       import cetz.draw: rect
 
@@ -96,10 +97,11 @@
 
   /// the z angle. -> angle
   z: 0deg,
+  length: 20pt,
 ) = {
   let size = cube.size
   cetz.canvas(
-    length: 3 / size * 28.35pt,
+    length: 3 / size * length,
     {
       import cetz.draw: *
 
