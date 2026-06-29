@@ -22,9 +22,9 @@
   }
 }
 
-/// rotates a given face. -> cube-t
+/// rotates a given face. -> cube
 #let _rotate_face(
-  /// the cube. -> cube-t
+  /// the cube. -> cube
   cube,
 
   /// the face to rotate, as a one-letter string -> srt
@@ -40,7 +40,30 @@
   return cube
 }
 
-#let rotate_layer(cube, index, depth: 1, n: 1) = {
+/// Rotates a sinle layer of a cube.
+///
+/// It returns the cube after applying the rotation.
+/// It is used for applying the 1-layer rotations explained in @sec:1-layer.
+/// -> cube
+#let rotate_layer(
+  /// The cube to apply the rotation.
+  /// -> cube
+  cube,
+
+  /// The layer to rotate, must be one of `("f", "r", "u", "b", "l", "d")`.
+  /// -> str
+  index,
+
+  /// The depth of the layer to rotate, by default 1, i.e., the outermost face.
+  ///
+  /// It cannot be greater or equal the size of the cube.
+  /// -> int
+  depth: 1,
+
+  /// The number of rotations to apply, by default 1.
+  /// -> int
+  n: 1,
+) = {
   let size = cube.size
   assert(
     index in ("f", "r", "u", "b", "l", "d"),
@@ -96,7 +119,20 @@
   }
 }
 
-#let rotate_cube(cube, axis) = {
+/// Rotates a cube.
+///
+/// It returns the cube after applying the rotation.
+/// It is used for applyng the rotations explained in @sec:cube-rotations.
+#let rotate_cube(
+  /// The cube to apply the rotation.
+  /// -> cube
+  cube,
+
+  /// The axis that will follow the rotation.
+  /// Must be one of `("x", "y", "z")`.
+  /// -> str
+  axis,
+) = {
   let copy = cube
   if axis == "x" {
     copy.f = cube.d

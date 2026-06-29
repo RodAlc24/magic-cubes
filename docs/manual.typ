@@ -278,6 +278,7 @@ Algorithms are written following the standard notation, it is fully documented o
 <sec:notation>
 
 == 1-layer moves // {{{
+<sec:1-layer>
 
 The basic moves are represented with one uppercase letter.
 There are six moves, one for each face of the cube: *F* (front), *R* (right), *U* (up), *B* (back), *L* (left) and *D* (down).
@@ -611,6 +612,7 @@ To do so, write the first and last layers before the move separated with a dash.
 // }}}
 
 == Cube rotations //{{{
+<sec:cube-rotations>
 
 For a complete cube rotation the letters *x*, *y* and *z* are used.
 This movements do not alter the state of the cube, just the point of view.
@@ -718,7 +720,7 @@ These modifiers can be applied to any notation described above.
 
   example(side-by-side: true)[
     ```typ
-    3Fw'
+    3Rw'
     ```
   ][
     #draw_cube(

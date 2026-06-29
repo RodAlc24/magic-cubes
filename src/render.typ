@@ -2,7 +2,7 @@
 
 /// Draws a flat cube.
 #let draw_flat(
-  /// The cube to draw. -> cube-t
+  /// The cube to draw. -> cube
   cube,
   length: 20pt,
 ) = {
@@ -86,7 +86,7 @@
 
 /// Draws a cube
 #let draw_cube(
-  /// the cube to draw. -> cube-t
+  /// the cube to draw. -> cube
   cube,
 
   /// the x angle. -> angle

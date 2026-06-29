@@ -4,6 +4,8 @@
 #let _parse(
   /// The algorithm to parse. -> str
   alg,
+
+  /// The size of the cube. -> int
   size,
 ) = {
   let a = alg.split(" ")
@@ -114,15 +116,20 @@
   return inverted
 }
 
-/// Returns a new cube after applying the algorithm. -> cube-t
+/// Returns a new cube after applying the algorithm.
+/// -> cube
 #let apply(
-  /// The cube to apply the algorithm. -> cube-t
+  /// The cube to apply the algorithm. -> cube
   cube,
 
-  /// The algorithm to apply. -> str
+  /// A string containing the algorithm to apply, following the notation spacified in @sec:notation.
+  /// -> str
   alg,
 
-  /// Whether it should be applied in inverse order. -> bool
+  /// Whether it should be applied in inverse order.
+  ///
+  /// This is useful when representing algorithms that, applied to the resulting cube, will solve it.
+  ///-> bool
   inverted: false,
 ) = {
   let list_alg = _parse(alg, cube.size)
