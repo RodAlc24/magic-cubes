@@ -4,6 +4,7 @@
 
 #set scale(reflow: true)
 
+// {{{
 #show: mantys(
   ..toml("../typst.toml"),
   themes: themes.default,
@@ -48,16 +49,9 @@
 #set text(hyphenate: true)
 #show "magic-cubes": package
 #show "CeTZ": package
+// }}}
 
-= About
-
-In 1974, Ernő Rubik invented a mechanical puzzle and called it the _Magic Cube_.
-Years later, in 1980, the puzzle was renamed the _Rubik's Cube_, the name by which it is now known.
-Today, it is considered to be the world's bestselling puzzle game.
-
-magic-cubes is a package built on top of CeTZ that allows you to create, manipulate and render Rubik's cubes of any size.
-
-= Examples
+= Examples // {{{
 
 ```side-by-side
 #draw_cube(
@@ -92,12 +86,12 @@ magic-cubes is a package built on top of CeTZ that allows you to create, manipul
   "z",
 ))
 
-#pagebreak()
-#draw_cube(cube(size: 3)),
+#draw_cube(cube(size: 3))
+// }}}
 
 = Guide
 
-== Creating cubes
+== Creating cubes // {{{
 <sec:creating-cubes>
 
 A cube is represented as a dictionary, and can be easily created with the @cmd:cube function.
@@ -150,7 +144,7 @@ The order of the pieces in a face is the following:
                 stroke: 0.3mm + red,
                 width: 100%,
                 height: 100%,
-                inset: 0.5em,
+                inset: 0.4em,
               ),
             )
             content(
@@ -161,7 +155,7 @@ The order of the pieces in a face is the following:
                 stroke: 0.3mm + blue,
                 width: 100%,
                 height: 100%,
-                inset: 0.5em,
+                inset: 0.4em,
               ),
             )
             content(
@@ -172,7 +166,7 @@ The order of the pieces in a face is the following:
                 stroke: 0.3mm,
                 width: 100%,
                 height: 100%,
-                inset: 0.5em,
+                inset: 0.4em,
               ),
             )
             content(
@@ -183,7 +177,7 @@ The order of the pieces in a face is the following:
                 stroke: 0.3mm + orange,
                 width: 100%,
                 height: 100%,
-                inset: 0.5em,
+                inset: 0.4em,
               ),
             )
             content(
@@ -194,7 +188,7 @@ The order of the pieces in a face is the following:
                 stroke: 0.3mm + green,
                 width: 100%,
                 height: 100%,
-                inset: 0.5em,
+                inset: 0.4em,
               ),
             )
             content(
@@ -205,7 +199,7 @@ The order of the pieces in a face is the following:
                 stroke: 0.3mm + yellow,
                 width: 100%,
                 height: 100%,
-                inset: 0.5em,
+                inset: 0.4em,
               ),
             )
           }
@@ -249,7 +243,7 @@ This order is also used in other size cubes, for example, if we want to create a
 )
 ```
 
-There are also some useful predefined cubes:
+There are also some useful predefined cubes: `f2l-cube` and `oll-cube`.
 
 #grid(
   columns: 2,
@@ -266,11 +260,69 @@ There are also some useful predefined cubes:
   ],
 )
 // TODO: change second example to draw_oll
+// }}}
 
-== Applying algorithms
+== Applying algorithms // {{{
 
 One of the main features of magic-cubes is the possibility to apply algorithms to the cubes.
-Algorithms are written following the standard notation, it is fully documented on @sec:notation
+Algorithms are written following the standard notation that is fully documented on @sec:notation.
+
+The function @cmd:apply receives a cube and an algorithm as a #typ.t.str.
+It is also possible, through the #arg[inverted] argument to apply the inverse algorithm.
+This results in a cube that, after applying the specified algorithm, will result in the original cube.
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        cube(),
+        "F"
+      )
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        cube(),
+        "M2 E2 S2"
+      )
+    )
+    ```
+  ],
+
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        cube(size: 4),
+        "2R L' 2-3u'"
+      )
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        f2l-cube,
+        inverted: true,
+        "U R U' R'"
+      )
+    )
+    ```
+  ],
+)
+
+#alert("info")[
+  There are also two alternative functions that lets you modify the cube: @cmd:rotate_layer and @cmd:rotate_cube.
+]
+
+// }}}
 
 == Rendering cubes
 
@@ -749,8 +801,7 @@ These modifiers can be applied to any notation described above.
 // }}}
 // }}}
 
-= Reference
-
+= Reference // {{{
 
 == Custom types
 
@@ -816,4 +867,5 @@ This type is used when creating a cube to specify the pieces of each face.
   ).join("\n"),
   omit-private-definitions: true,
 )
+// }}}
 
