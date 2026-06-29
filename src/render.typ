@@ -1,4 +1,5 @@
 #import "deps.typ": cetz
+#import "parser.typ": apply
 
 /// Draws a flat cube.
 #let draw_flat(
@@ -13,46 +14,45 @@
       import cetz.draw: rect
 
       let gap = size / 3 * 0.2
-      let k = 0.015
-      k = 0
+      let stroke = calc.min(0.3mm, 3 / size * 0.4mm)
 
       for i in range(size) {
         for j in range(size) {
           rect(
-            (j + k, size - i - k),
-            (j + 1 - k, size - i - 1 + k),
+            (j, size - i),
+            (j + 1, size - i - 1),
             fill: cube.f.at(i * size + j),
-            stroke: 0.3mm,
+            stroke: stroke,
           )
           rect(
-            (size + gap + j + k, size - i - k),
-            (size + gap + j + 1 - k, size - i - 1 + k),
+            (size + gap + j, size - i),
+            (size + gap + j + 1, size - i - 1),
             fill: cube.r.at(i * size + j),
-            stroke: 0.3mm,
+            stroke: stroke,
           )
           rect(
-            (j + k, size + gap + size - i - k),
-            (j + 1 - k, size + gap + size - i - 1 + k),
+            (j, size + gap + size - i),
+            (j + 1, size + gap + size - i - 1),
             fill: cube.u.at(i * size + j),
-            stroke: 0.3mm,
+            stroke: stroke,
           )
           rect(
-            (2 * (size + gap) + j + k, size - i - k),
-            (2 * (size + gap) + j + 1 - k, size - i - 1 + k),
+            (2 * (size + gap) + j, size - i),
+            (2 * (size + gap) + j + 1, size - i - 1),
             fill: cube.b.at(i * size + j),
-            stroke: 0.3mm,
+            stroke: stroke,
           )
           rect(
-            (-size - gap + j + k, size - i - k),
-            (-size - gap + j + 1 - k, size - i - 1 + k),
+            (-size - gap + j, size - i),
+            (-size - gap + j + 1, size - i - 1),
             fill: cube.l.at(i * size + j),
-            stroke: 0.3mm,
+            stroke: stroke,
           )
           rect(
-            (j + k, -size - gap + size - i - k),
-            (j + 1 - k, -size - gap + size - i - 1 + k),
+            (j, -size - gap + size - i),
+            (j + 1, -size - gap + size - i - 1),
             fill: cube.d.at(i * size + j),
-            stroke: 0.3mm,
+            stroke: stroke,
           )
         }
       }
@@ -62,8 +62,6 @@
 
 #let _face(cube, index) = {
   let size = cube.size
-  let k = 0.015
-  k = 0
   for i in range(size) {
     for j in range(size) {
       let l = if index in ("f", "l", "d") {
@@ -75,10 +73,10 @@
       }
 
       cetz.draw.rect(
-        (j + k - size / 2, size / 2 - i - k),
-        (j + 1 - k - size / 2, size / 2 - i - 1 + k),
+        (j - size / 2, size / 2 - i),
+        (j + 1 - size / 2, size / 2 - i - 1),
         fill: cube.at(index).at(l),
-        stroke: 0.3mm,
+        stroke: calc.min(0.3mm, 3 / size * 0.4mm),
       )
     }
   }
@@ -130,6 +128,97 @@
           _face(cube, "d")
         })
       })
+    },
+  )
+}
+
+#let draw_face(
+  cube,
+  face,
+  up-face: auto,
+  length: 20pt,
+  lateral-faces: true,
+) = {
+  let size = cube.size
+
+  assert(
+    face in ("f", "r", "u", "b", "l", "d"),
+    message: "Invalid argument (face): Expected one of (\"f\", \"r\", \"u\", \"b\", \"l\", \"d\"), got: "
+      + face,
+  )
+
+  if lateral-faces {
+    let faces = (
+      f: (u: "", r: "z'", d: "z2", l: "z"),
+      r: (u: "y", b: "y z'", d: "y z2", f: "y z"),
+      u: (b: "x'", r: "x' z'", f: "x' z2", l: "x' z"),
+      b: (u: "y2", l: "y2 z'", d: "y2 z2", r: "y2 z"),
+      l: (u: "y'", f: "y' z'", d: "y' z2", b: "y' z"),
+      d: (f: "x", r: "x z'", b: "x z2", l: "x z"),
+    )
+
+    if up-face == auto {
+      if face == "u" {
+        up-face = "b"
+      } else if face == "d" {
+        up-face = "f"
+      } else {
+        up-face = "u"
+      }
+    }
+
+    if up-face != auto {
+      assert(
+        up-face in faces.at(face).keys(),
+        message: "Invalid argument (up-face): Must be one of the adjacent faces of argument face ("
+          + face
+          + ") or auto. Got: "
+          + str(up-face),
+      )
+    }
+
+    cube = apply(cube, faces.at(face).at(up-face))
+  }
+
+  cetz.canvas(
+    length: 3 / size * length,
+    {
+      import cetz.draw: *
+
+      let gap = size / 3 * 0.2
+      let height = size / 3 * 0.4
+      let stroke = calc.min(0.3mm, 3 / size * 0.4mm)
+
+      _face(cube, "f")
+
+      if lateral-faces {
+        for i in range(size) {
+          rect(
+            (-size / 2 + i, size / 2 + height + gap),
+            (-size / 2 + (i + 1), size / 2 + gap),
+            fill: cube.u.at(size * (size - 1) + i),
+            stroke: stroke,
+          )
+          rect(
+            (-size / 2 + i, -size / 2 - height - gap),
+            (-size / 2 + (i + 1), -size / 2 - gap),
+            fill: cube.d.at(i),
+            stroke: stroke,
+          )
+          rect(
+            (size / 2 + height + gap, -size / 2 + i),
+            (size / 2 + gap, -size / 2 + (i + 1)),
+            fill: cube.r.at(size * (size - i - 1)),
+            stroke: stroke,
+          )
+          rect(
+            (-size / 2 - height - gap, -size / 2 + i),
+            (-size / 2 - gap, -size / 2 + (i + 1)),
+            fill: cube.l.at(size * (size - i - 1) + size - 1),
+            stroke: stroke,
+          )
+        }
+      }
     },
   )
 }
