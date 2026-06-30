@@ -8,7 +8,8 @@
   /// The size of the cube. -> int
   size,
 ) = {
-  let a = alg.split(" ")
+  let a = alg.replace(regex("[()]"), "")
+  a = a.split(" ")
   let list_alg = ()
 
   for move in a {

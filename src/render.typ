@@ -198,6 +198,7 @@
   /// -> bool
   lateral-faces: true,
 
+  /// TODO: docuemnt and publish this
   _arrows: none,
 ) = {
   let size = cube.size
@@ -297,10 +298,24 @@
   )
 }
 
-#let draw_f2l(alg, cube: f2l-cube, length: 60pt) = {
+/// Draws a cube after applying the algorithm alongside with the algorithm.
+/// Default cube is #var[f2l-cube].
+#let draw_f2l(
+  /// The algorithm to apply.
+  /// -> str
+  alg,
+
+  /// The cube to draw.
+  /// -> cube
+  cube: f2l-cube,
+
+  /// The length of the side of the cube.
+  /// See @cmd:draw_cube.
+  /// -> length
+  length: 60pt,
+) = {
   box(
     inset: 1em,
-    stroke: 5pt,
     grid(
       align: center,
       row-gutter: 2em,
@@ -318,10 +333,24 @@
   )
 }
 
-#let draw_oll(alg, cube: oll-cube, length: 60pt) = {
+/// Draws a face after applying the algorithm alongside with the algorithm.
+/// Default cube is #var[oll-cube].
+#let draw_oll(
+  /// The algorithm to apply.
+  /// -> str
+  alg,
+
+  /// The cube to draw.
+  /// -> cube
+  cube: oll-cube,
+
+  /// The length of the side of the cube.
+  /// See @cmd:draw_cube.
+  /// -> length
+  length: 60pt,
+) = {
   box(
     inset: 1em,
-    stroke: 5pt,
     grid(
       align: center,
       row-gutter: 2em,
@@ -340,11 +369,30 @@
   )
 }
 
+/// Draws a face after applying the algorithm alongside with the algorithm.
+/// It may also show arrows with the movement of the pieces on the upper face.
+/// Default cube is #var[oll-cube].
 #let draw_pll(
+  /// The algorithm to apply.
+  /// -> str
   alg,
+
+  /// The cube to draw.
+  /// -> cube
   cube: solved-cube,
+
+  /// Whether to show or not the lateral faces.
+  /// See @cmd:draw_face
+  /// -> bool
   lateral-faces: false,
+
+  /// Whether to show or not arrows representing the moves.
+  /// -> bool
   arrows: true,
+
+  /// The length of the side of the cube.
+  /// See @cmd:draw_cube.
+  /// -> length
   length: 60pt,
 ) = {
   let initial_state = apply(
@@ -369,7 +417,6 @@
 
   box(
     inset: 1em,
-    stroke: 5pt,
     grid(
       align: center,
       row-gutter: 2em,
@@ -383,7 +430,7 @@
         length: length,
         lateral-faces: lateral-faces,
         "u",
-        arrows: arrows,
+        _arrows: arrows,
       ),
       text(alg),
     ),

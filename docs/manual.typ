@@ -471,6 +471,96 @@ This argument defaults to #typ.t.auto, which means that the #arg[up-face] will t
     ```
   ],
 )
+
+// TODO: Document arrows
+#pagebreak()
+=== Other views
+
+The package also provides three specialized rendering functions.
+These functions are convenience wrappers around the rendering functions described above.
+They take an algorithm, applies it to the cube, and displays the algorithm below the rendered cube.
+
+#alert(
+  "info",
+)[Check the API Reference on @sec:api for a complete list of arguments.]
+==== @cmd:draw_f2l
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_f2l(
+      "(R U' R' U)    (R U' R')",
+      length: 45pt
+
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_f2l(
+      "d (R' U2 R) d' (R U R')",
+      length: 45pt
+    )
+    ```
+  ],
+)
+
+==== @cmd:draw_oll
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_oll(
+      "(R U R' U') r R' (U R U' r')",
+      length: 45pt
+
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_oll(
+      "R U2 R2 U' R2 U' R2 U2 R",
+      length: 45pt
+    )
+    ```
+  ],
+)
+
+==== @cmd:draw_pll
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_pll(
+      "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+      length: 45pt
+
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_pll(
+      "R U R' U' R' F R2 U' R' U' R U R' F'",
+      length: 45pt
+    )
+    ```
+  ],
+)
+
+#alert(
+  "error",
+)[Arrows are a experimental feature for @cmd:draw_face and will improve in a future release.]
 // }}}
 // }}}
 
@@ -589,6 +679,7 @@ The outermost layer has a depth of 1 and layer numbering always starts from the 
   If you want to rotate the opposite face use the corresponding notation, i.e., in a 4x4x4 cube a 4F rotation is not allowed, the correct notation is B'.
 ]
 
+#pagebreak()
 // {{{
 #grid(
   columns: 2,
@@ -955,9 +1046,76 @@ These modifiers can be applied to any notation described above.
 )
 // }}}
 // }}}
+
+#alert("success")[
+  You can also use parenthesis for improving the legibility of the algorithms.
+  They will be ignored by the parser.
+]
+
+// {{{
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  example(side-by-side: true)[
+    ```typ
+    F B R L F B R L F B R L
+    ```
+  ][
+    #draw_cube(
+      apply(
+        cube(),
+        "F B R L F B R L F B R L",
+      ),
+      length: 45pt,
+    )
+  ],
+  example(side-by-side: true)[
+    ```typ
+    B2 R2 D' F2 D2 B2 U B2 L2 U L' R' B D U L2 R Fw2 Lw2 D U Bw2 Dw2 R2 B U2 R L
+    ```
+  ][
+    #draw_cube(
+      apply(
+        cube(size: 4),
+        "B2 R2 D' F2 D2 B2 U B2 L2 U L' R' B D U L2 R Fw2 Lw2 D U Bw2 Dw2 R2 B U2 R L",
+      ),
+      length: 45pt,
+    )
+  ],
+
+  example(side-by-side: true)[
+    ```typ
+    F2 R' B' U R' L F' L F' B D' R B L2
+    ```
+  ][
+    #draw_cube(
+      apply(
+        cube(),
+        "F2 R' B' U R' L F' L F' B D' R B L2",
+      ),
+      length: 45pt,
+    )
+  ],
+  example(side-by-side: true)[
+    ```typ
+    U' L' U' F' R2 B' R F U B2 U B' L U' F U R F'
+    ```
+  ][
+    #draw_cube(
+      apply(
+        cube(),
+        "U' L' U' F' R2 B' R F U B2 U B' L U' F U R F'",
+      ),
+      length: 45pt,
+    )
+  ],
+)
+// }}}
 // }}}
 
-= Reference // {{{
+= API Reference // {{{
+<sec:api>
 
 == Custom types
 
@@ -1040,19 +1198,49 @@ All the arrays must have the same length and it must be equal to the square of t
 )[Not all keys need to be present for a valid @type:cube-stickers value.]
 #show heading.where(level: 3): set heading(outlined: true)
 
-== Functions
-
+== Preset cubes
 #tidy-module(
-  "main",
+  "Cube",
   (
-    read("../src/parser.typ"),
-    read("../src/moves.typ"),
-    read("../src/render.typ"),
-    read("../src/cube.typ"),
     read("../src/presets.typ"),
   ).join("\n"),
   omit-private-definitions: true,
   omit-private-parameters: true,
 )
+
+== Functions
+
+=== Cubes
+#tidy-module(
+  "Cube",
+  (
+    read("../src/cube.typ"),
+  ).join("\n"),
+  omit-private-definitions: true,
+  omit-private-parameters: true,
+)
+
+#pagebreak()
+=== Algorithms
+#tidy-module(
+  "Cube",
+  (
+    read("../src/parser.typ"),
+    read("../src/moves.typ"),
+  ).join("\n"),
+  omit-private-definitions: true,
+  omit-private-parameters: true,
+)
+
+=== Render
+#tidy-module(
+  "Cube",
+  (
+    read("../src/render.typ"),
+  ).join("\n"),
+  omit-private-definitions: true,
+  omit-private-parameters: true,
+)
+
 // }}}
 
