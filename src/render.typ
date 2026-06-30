@@ -1,5 +1,6 @@
 #import "deps.typ": cetz
 #import "parser.typ": apply
+#import "presets.typ": f2l-cube, oll-cube, solved-cube
 
 /// Draws a flat representation of the cube.
 /// -> content
@@ -196,6 +197,8 @@
   /// Whether lateral faces will appear or not.
   /// -> bool
   lateral-faces: true,
+
+  _arrows: none,
 ) = {
   let size = cube.size
 
@@ -247,6 +250,21 @@
 
       _face(cube, "f")
 
+      if _arrows != none {
+        for (i, j) in _arrows {
+          line(
+            (
+              -size / 2 + 0.5 + calc.rem(j, size),
+              -size / 2 + 0.5 + size - 1 - calc.floor(j / size),
+            ),
+            (
+              -size / 2 + 0.5 + calc.rem(i, size),
+              -size / 2 + 0.5 + size - 1 - calc.floor(i / size),
+            ),
+            mark: (end: "stealth", fill: black),
+          )
+        }
+      }
       if lateral-faces {
         for i in range(size) {
           rect(
@@ -276,5 +294,98 @@
         }
       }
     },
+  )
+}
+
+#let draw_f2l(alg, cube: f2l-cube, length: 60pt) = {
+  box(
+    inset: 1em,
+    stroke: 5pt,
+    grid(
+      align: center,
+      row-gutter: 2em,
+      columns: 2 * length,
+      draw_cube(
+        apply(
+          cube,
+          alg,
+          inverted: true,
+        ),
+        length: length,
+      ),
+      text(alg),
+    ),
+  )
+}
+
+#let draw_oll(alg, cube: oll-cube, length: 60pt) = {
+  box(
+    inset: 1em,
+    stroke: 5pt,
+    grid(
+      align: center,
+      row-gutter: 2em,
+      columns: 2 * length,
+      draw_face(
+        apply(
+          cube,
+          alg,
+          inverted: true,
+        ),
+        length: length,
+        "u",
+      ),
+      text(alg),
+    ),
+  )
+}
+
+#let draw_pll(
+  alg,
+  cube: solved-cube,
+  lateral-faces: false,
+  arrows: true,
+  length: 60pt,
+) = {
+  let initial_state = apply(
+    (
+      size: 3,
+      f: 9 * (none,),
+      r: 9 * (none,),
+      u: (0, 1, 2, 3, 4, 5, 6, 7, 8),
+      b: 9 * (none,),
+      l: 9 * (none,),
+      d: 9 * (none,),
+    ),
+    alg,
+  )
+
+  let arrows = ()
+  for (i, sticker) in initial_state.u.enumerate() {
+    if sticker != none and i != sticker {
+      arrows.push((i, sticker))
+    }
+  }
+
+  box(
+    inset: 1em,
+    stroke: 5pt,
+    grid(
+      align: center,
+      row-gutter: 2em,
+      columns: 2 * length,
+      draw_face(
+        apply(
+          cube,
+          alg,
+          inverted: true,
+        ),
+        length: length,
+        lateral-faces: lateral-faces,
+        "u",
+        arrows: arrows,
+      ),
+      text(alg),
+    ),
   )
 }
