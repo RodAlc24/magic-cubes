@@ -90,7 +90,7 @@
 #draw_cube(cube(size: 3))
 // }}}
 
-= Guide
+= Guide // {{{
 
 == Creating cubes // {{{
 <sec:creating-cubes>
@@ -118,9 +118,9 @@ The default colors are:
 )
 
 It is also possible to specify a face manually, in that case the corresponding value in #arg[colors] is ignored.
-When specifying the colors manually, all the pieces in the face must be determined.
+When specifying the colors manually, all the stickers in the face must be determined.
 
-The order of the pieces in a face is the following:
+The order of the stickers in a face is the following:
 
 #frame(
   {
@@ -219,7 +219,7 @@ The order of the pieces in a face is the following:
   This can be useful, for example, to add a gray color to the non relevant pieces.
 ]
 
-This order is also used in other size cubes, for example, if we want to create a 2x2x2 cube with a custom color in front face and custom up and right faces we can do:
+A similar order is used in other size cubes, for example, if we want to create a 2x2x2 cube with a custom color in front face and custom up and right faces we can do:
 ```side-by-side
 #draw_flat(
   length: 45pt,
@@ -244,25 +244,27 @@ This order is also used in other size cubes, for example, if we want to create a
 )
 ```
 
-There are also some useful predefined cubes: `f2l-cube` and `oll-cube`.
+There are also some useful predefined cubes: #var[f2l-cube] and #var[oll-cube].
 
 #grid(
   columns: 2,
   column-gutter: 2mm,
+  row-gutter: 2mm,
   [
     ```example
-    #draw_cube(f2l-cube, length: 30pt)
+    #draw_cube(f2l-cube)
     ```
   ],
   [
     ```example
-    #draw_cube(oll-cube, length: 30pt)
+    #draw_cube(oll-cube)
     ```
   ],
 )
 // TODO: change second example to draw_oll
 // }}}
 
+#pagebreak()
 == Applying algorithms // {{{
 
 One of the main features of magic-cubes is the possibility to apply algorithms to the cubes.
@@ -275,6 +277,7 @@ This results in a cube that, after applying the specified algorithm, will result
 #grid(
   columns: 2,
   column-gutter: 2mm,
+  row-gutter: 2mm,
   [
     ```side-by-side
     #draw_cube(
@@ -323,18 +326,168 @@ This results in a cube that, after applying the specified algorithm, will result
   There are also two alternative functions that lets you modify the cube: @cmd:rotate_layer and @cmd:rotate_cube.
 ]
 
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_cube(
+      rotate_layer(
+        cube(size: 4),
+        "r",
+        depth: 2,
+        n: 2
+      )
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_cube(
+      rotate_cube(
+        cube(),
+        "x"
+      )
+    )
+    ```
+  ],
+)
+
 // }}}
 
-== Rendering cubes
+== Rendering cubes // {{{
+
+=== Flat representation
+
+It is possible to get a full representation of the cube with @cmd:draw_flat.
+This function takes a @type:cube and draws its net.
+It also accepts a #arg[length] argument to change the length of each cube edge.
+
+```example
+#draw_flat(cube())
+```
+
+The faces are displayed in the standard cube net layout.
+The center row contains the left, front, right and back faces.
+The upper face is placed above the front face, and the down face is placed below it.
+
+=== 3D cube
+
+Another option is to draw a three-dimensional representation of the cube.
+This is done with @cmd:draw_cube.
+
+Apart from the #arg[cube] and #arg[length] arguments, which behave the same as in @cmd:draw_flat, it also accepts #arg[x], #arg[y] and #arg[z] arguments to customize the cube orientation.
+By default, the cube is drawn in an isometric projection.
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_cube(
+      cube(),
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_cube(
+      cube(),
+      x: -35.264deg,
+      y: 225deg,
+    )
+    ```
+  ],
+)
+
+=== Face view
+
+The third type of representation is achieved with @cmd:draw_face.
+This draws a single face, optionally including the first row of the adjacent faces.
+This view is commonly used to illustrate Orientation of the Last Layer (OLL) and Permutation of the Last Layer (PLL) algorithms.
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_face(
+      apply(
+        oll-cube,
+        "F R U R' U' F'",
+        inverted: true
+      ),
+      "u"
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_face(
+      apply(
+        cube(),
+        "M2 E2 S2"
+      ),
+      "u",
+      lateral-faces: false
+    )
+    ```
+  ],
+)
+
+In addition to the face to display, you may also specify the face that will be displayed on the top to control the orientation of the cube.
+This argument defaults to #typ.t.auto, which means that the #arg[up-face] will take the value of `"u"` if #arg[face] is set to `"f"`, `"r"`, `"b"` or `"l"`; `"f"` if #arg[face] is `"d"` and `"b"` if #arg[face] is `"u"`.
+
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_face(
+      apply(
+        cube(),
+        "F R l U' R2",
+        inverted: true
+      ),
+      "u"
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_face(
+      apply(
+        cube(),
+        "F R l U' R2",
+        inverted: true
+      ),
+      "u",
+      up-face: "r"
+    )
+    ```
+  ],
+)
+// }}}
+// }}}
 
 = Cube notation // {{{
 <sec:notation>
+
+Algorithms are written as a string, consisting of a sequence of moves separated by spaces.
+These moves may represent rotations of one or more layers, or even of the entire cube.
+
+Parenthesis may also be used for clarification, they are ignored by the parser.
+Any other character that is not part of the valid notation will cause an error.
 
 == 1-layer moves // {{{
 <sec:1-layer>
 
 The basic moves are represented with one uppercase letter.
-There are six moves, one for each face of the cube: *F* (front), *R* (right), *U* (up), *B* (back), *L* (left) and *D* (down).
+There are six moves, one for each face of the cube: *F* (front), *R* (right), *U* (upper), *B* (back), *L* (left) and *D* (down).
 Each represents a single clockwise rotation.
 Double and counterclockwise rotations are explained in @sec:modifiers.
 
@@ -734,6 +887,7 @@ This movements do not alter the state of the cube, just the point of view.
 // }}}
 // }}}
 
+#pagebreak()
 == Modifiers // {{{
 <sec:modifiers>
 
@@ -807,6 +961,7 @@ These modifiers can be applied to any notation described above.
 
 == Custom types
 
+#show heading.where(level: 3): set heading(outlined: false)
 === @type:face
 #custom-type("face", color: blue.lighten(60%))
 
@@ -883,6 +1038,7 @@ All the arrays must have the same length and it must be equal to the square of t
 #alert(
   "info",
 )[Not all keys need to be present for a valid @type:cube-stickers value.]
+#show heading.where(level: 3): set heading(outlined: true)
 
 == Functions
 
