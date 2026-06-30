@@ -8,13 +8,13 @@
   d: yellow,
 )
 
-/// This function creates a @type:cube given the size, colors, and/or state.
+/// This function creates a @type:cube given the size, colors, and/or stickers.
 /// This is the correct way to create @type:cube instances.
 ///
-/// The #arg[state] argument lets you specify all the stickers on a face.
+/// The #arg[stickers] argument lets you specify all the stickers on a face.
 /// Note that if a face is specified with this argument, it must be fully specified, and the corresponding entry in #arg[colors] is ignored.
 ///
-/// #alert("warning")[For each face present in #arg[state], the corresponding value in #arg[colors] is ignored.]
+/// #alert("warning")[For each face present in #arg[stickers], the corresponding value in #arg[colors] is ignored.]
 /// -> cube
 #let cube(
   /// The size of the cube.
@@ -42,11 +42,11 @@
   /// -> cube-colors | auto
   colors: auto,
 
-  /// The state of the cube.
+  /// The stickers of the cube.
   /// By default, the cube is initialized in the solved state.
   /// See @sec:creating-cubes for more details and examples.
-  /// -> cube-state | auto
-  state: auto,
+  /// -> cube-stickers | auto
+  stickers: auto,
 ) = {
   assert(
     type(size) == int and size > 0,
@@ -73,50 +73,50 @@
     colors = default-colors
   }
 
-  if state != auto {
+  if stickers != auto {
     assert(
-      type(state) == dictionary,
-      message: "Argument error: state must be a dictionary",
+      type(stickers) == dictionary,
+      message: "Argument error: stickers must be a dictionary",
     )
-    for face in state {
+    for face in stickers {
       assert(
         face.first() in faces,
         message: "Key error: " + face.first() + " is not a valid key",
       )
       assert(
         type(face.last()) == array,
-        message: "Value error: state values must be arrays",
+        message: "Value error: stickers values must be arrays",
       )
       assert(
         face.last().len() == size * size,
-        message: "Length error: length of state values must be "
+        message: "Length error: length of stickers values must be "
           + str(size * size),
       )
       for elem in face.last() {
         assert(
           type(elem) == color,
-          message: "Value error: state values must be arrays of colors",
+          message: "Value error: stickers values must be arrays of colors",
         )
       }
     }
   } else {
-    state = (:)
+    stickers = (:)
   }
 
   for elem in faces {
-    if elem not in state {
-      state.insert(elem, size * size * (colors.at(elem),))
+    if elem not in stickers {
+      stickers.insert(elem, size * size * (colors.at(elem),))
     }
   }
 
   return (
     size: size,
-    f: state.f,
-    r: state.r,
-    u: state.u,
-    b: state.b,
-    l: state.l,
-    d: state.d,
+    f: stickers.f,
+    r: stickers.r,
+    u: stickers.u,
+    b: stickers.b,
+    l: stickers.l,
+    d: stickers.d,
   )
 }
 

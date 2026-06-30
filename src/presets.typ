@@ -1,7 +1,7 @@
 #import "cube.typ": cube
 
 #let f2l-cube = cube(
-  state: (
+  stickers: (
     f: 3 * (gray,) + 6 * (red,),
     r: 3 * (gray,) + 6 * (blue,),
     u: 9 * (gray,),
@@ -12,7 +12,7 @@
 )
 
 #let oll-cube = cube(
-  state: (
+  stickers: (
     f: 9 * (gray,),
     r: 9 * (gray,),
     u: 9 * (yellow,),

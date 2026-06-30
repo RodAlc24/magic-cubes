@@ -226,7 +226,7 @@ This order is also used in other size cubes, for example, if we want to create a
   cube(
     size: 2,
     colors: (f: maroon),
-    state: (
+    stickers: (
       u: (
         red,
         orange,
@@ -806,6 +806,25 @@ These modifiers can be applied to any notation described above.
 
 == Custom types
 
+=== @type:face
+#custom-type("face", color: blue.lighten(60%))
+
+@type:face is the type used throughout the package to refer to one of the six faces of the cube.
+It accepts the following #typ.t.str values:
+
+#frame(
+  [
+    - `"f"`: for the #strong[f]ront face.
+    - `"r"`: for the #strong[r]ight face.
+    - `"u"`: for the #strong[u]pper face.
+    - `"b"`: for the #strong[b]ack face.
+    - `"l"`: for the #strong[l]eft face.
+    - `"d"`: for the #strong[d]own face.
+  ],
+)
+
+#alert("warning")[Face identifiers are lowercase and case-sensitive.]
+
 === @type:cube
 
 @type:cube represents the complete state of a Rubik's cube, it it the main element in this package.
@@ -825,6 +844,8 @@ Instead, use @cmd:cube to create instances and @cmd:apply to manipulate them.
   [Each array must contain $#arg[size]^2$ elements.],
 )
 
+#pagebreak()
+
 === @type:cube-colors
 
 This type is used when creating a cube to specify the color of each face.
@@ -840,14 +861,12 @@ This type is used when creating a cube to specify the color of each face.
   [Not all keys need to be present for a valid @type:cube-colors value.],
 )
 
-#pagebreak(weak: true)
-
-=== @type:cube-state
+=== @type:cube-stickers
 
 This type is used when creating a cube to specify the color of the stickers for each face.
 All the arrays must have the same length and it must be equal to the square of the size of the cube.
 #frame(
-  schema("cube-state", color: green.lighten(60%), z.dictionary((
+  schema("cube-stickers", color: green.lighten(60%), z.dictionary((
     f: z.array(z.color(), default: none),
     r: z.array(z.color(), default: none),
     u: z.array(z.color(), default: none),
@@ -855,7 +874,7 @@ All the arrays must have the same length and it must be equal to the square of t
     l: z.array(z.color(), default: none),
     d: z.array(z.color(), default: none),
   ))),
-  [Not all keys need to be present for a valid @type:cube-state value.],
+  [Not all keys need to be present for a valid @type:cube-stickers value.],
 )
 
 
