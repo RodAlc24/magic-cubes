@@ -1,15 +1,20 @@
 #import "deps.typ": cetz
 #import "parser.typ": apply
 
-/// Draws a flat cube.
+/// Draws a flat representation of the cube.
+/// -> content
 #let draw_flat(
-  /// The cube to draw. -> cube
+  /// The cube to draw.
+  /// -> cube
   cube,
-  length: 20pt,
+
+  /// The length of the side of the cube.
+  /// -> length
+  length: 60pt,
 ) = {
   let size = cube.size
   cetz.canvas(
-    length: 3 / size * length,
+    length: length / size,
     {
       import cetz.draw: rect
 
@@ -60,7 +65,17 @@
   )
 }
 
-#let _face(cube, index) = {
+/// Draws a single face of a cube.
+/// -> content
+#let _face(
+  /// The cube.
+  /// -> cube
+  cube,
+
+  /// The face, one of f, r, u, b, l, d
+  /// -> str
+  index,
+) = {
   let size = cube.size
   for i in range(size) {
     for j in range(size) {
@@ -82,24 +97,42 @@
   }
 }
 
-/// Draws a cube
+/// Draws a 3D representation of the cube.
+///
+/// The orientation can be modified with the #arg[x], #arg[y] and #arg[z] arguments.
+/// The default orientation is an isometric projection.
+/// For more details, see the CeTZ #link("https://cetz-package.github.io/docs/api/draw-functions/projections/ortho")[documentation].
+///
+/// -> content
 #let draw_cube(
-  /// the cube to draw. -> cube
+  /// The cube to draw.
+  /// -> cube
   cube,
 
-  /// the x angle. -> angle
+  /// Rotation around the x-axis.
+  /// -> angle
   x: 35.264deg,
 
-  /// the y angle. -> angle
+  /// Rotation around the y-axis.
+  /// -> angle
   y: 45deg,
 
-  /// the z angle. -> angle
+  /// Rotation around the z-axis.
+  /// -> angle
   z: 0deg,
-  length: 20pt,
+
+  /// The length of the side of the cube.
+  ///
+  /// #alert("warning")[
+  ///  Note that it is different from the cube length.
+  ///  #arg[length] specifies the length of *one cube edge before projection*.
+  /// ]
+  /// -> length
+  length: 60pt,
 ) = {
   let size = cube.size
   cetz.canvas(
-    length: 3 / size * length,
+    length: length / size,
     {
       import cetz.draw: *
 
@@ -132,11 +165,36 @@
   )
 }
 
+/// Draws a single face of the cube, and optionally the first row of the adjacent faces.
+///-> content
 #let draw_face(
+  /// The cube to draw.
+  /// -> cube
   cube,
+
+  /// The face to display.
+  ///
+  /// It must be one of `("f", "r", "u", "b", "l", "d")`.
+  /// -> str
   face,
+
+  /// The face that will be displayed above the main face.
+  /// It defines the orientation of the cube.
+  /// If set to #typ.t.auto, the logical default is used:
+  /// - For `"f", "r", "b"` and `"l"`: `"u"`.
+  /// - For `"u"`: `"b"`.
+  /// - For `"d"`: `"f"`.
+  ///
+  /// Valid values are #typ.t.auto and any face except the selected in #arg[face] and its opposite.
+  /// -> str | auto
   up-face: auto,
-  length: 20pt,
+
+  /// The length of the side of the cube.
+  /// -> length
+  length: 60pt,
+
+  /// Whether lateral faces will appear or not.
+  /// -> bool
   lateral-faces: true,
 ) = {
   let size = cube.size
@@ -147,41 +205,39 @@
       + face,
   )
 
-  if lateral-faces {
-    let faces = (
-      f: (u: "", r: "z'", d: "z2", l: "z"),
-      r: (u: "y", b: "y z'", d: "y z2", f: "y z"),
-      u: (b: "x'", r: "x' z'", f: "x' z2", l: "x' z"),
-      b: (u: "y2", l: "y2 z'", d: "y2 z2", r: "y2 z"),
-      l: (u: "y'", f: "y' z'", d: "y' z2", b: "y' z"),
-      d: (f: "x", r: "x z'", b: "x z2", l: "x z"),
-    )
+  let faces = (
+    f: (u: "", r: "z'", d: "z2", l: "z"),
+    r: (u: "y", b: "y z'", d: "y z2", f: "y z"),
+    u: (b: "x'", r: "x' z'", f: "x' z2", l: "x' z"),
+    b: (u: "y2", l: "y2 z'", d: "y2 z2", r: "y2 z"),
+    l: (u: "y'", f: "y' z'", d: "y' z2", b: "y' z"),
+    d: (f: "x", r: "x z'", b: "x z2", l: "x z"),
+  )
 
-    if up-face == auto {
-      if face == "u" {
-        up-face = "b"
-      } else if face == "d" {
-        up-face = "f"
-      } else {
-        up-face = "u"
-      }
+  if up-face == auto {
+    if face == "u" {
+      up-face = "b"
+    } else if face == "d" {
+      up-face = "f"
+    } else {
+      up-face = "u"
     }
-
-    if up-face != auto {
-      assert(
-        up-face in faces.at(face).keys(),
-        message: "Invalid argument (up-face): Must be one of the adjacent faces of argument face ("
-          + face
-          + ") or auto. Got: "
-          + str(up-face),
-      )
-    }
-
-    cube = apply(cube, faces.at(face).at(up-face))
   }
 
+  if up-face != auto {
+    assert(
+      up-face in faces.at(face).keys(),
+      message: "Invalid argument (up-face): Must be one of the adjacent faces of argument face ("
+        + face
+        + ") or auto. Got: "
+        + str(up-face),
+    )
+  }
+
+  cube = apply(cube, faces.at(face).at(up-face))
+
   cetz.canvas(
-    length: 3 / size * length,
+    length: length / size,
     {
       import cetz.draw: *
 

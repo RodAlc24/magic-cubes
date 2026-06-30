@@ -116,19 +116,19 @@
   return inverted
 }
 
-/// Returns a new cube after applying the algorithm.
+/// Returns a new @type:cube with an algorithm applied.
 /// -> cube
 #let apply(
-  /// The cube to apply the algorithm. -> cube
+  /// The cube to which the algorithm is applied.
+  /// -> cube
   cube,
 
-  /// A string containing the algorithm to apply, following the notation spacified in @sec:notation.
+  /// A string containing the algorithm to apply, following the notation specified in @sec:notation.
   /// -> str
   alg,
 
-  /// Whether it should be applied in inverse order.
-  ///
-  /// This is useful when representing algorithms that, applied to the resulting cube, will solve it.
+  /// If true, the inverse of the algorithm is applied.
+  /// This is useful when documenting solution algorithms, which are intended to solve the resulting cube.
   ///-> bool
   inverted: false,
 ) = {

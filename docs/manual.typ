@@ -3,12 +3,13 @@
 #import "@preview/valkyrie:0.2.2" as z
 
 #set scale(reflow: true)
+#set text(hyphenate: false)
 
 // {{{
 #show: mantys(
   ..toml("../typst.toml"),
   themes: themes.default,
-  title: "magic-cubes",
+  //title: "magic-cubes",
   abstract: [
     #align(
       center + horizon,
@@ -221,7 +222,7 @@ The order of the pieces in a face is the following:
 This order is also used in other size cubes, for example, if we want to create a 2x2x2 cube with a custom color in front face and custom up and right faces we can do:
 ```side-by-side
 #draw_flat(
-  length: 15pt,
+  length: 45pt,
   cube(
     size: 2,
     colors: (f: maroon),
@@ -250,12 +251,12 @@ There are also some useful predefined cubes: `f2l-cube` and `oll-cube`.
   column-gutter: 2mm,
   [
     ```example
-    #draw_cube(f2l-cube, length: 10pt)
+    #draw_cube(f2l-cube, length: 30pt)
     ```
   ],
   [
     ```example
-    #draw_cube(oll-cube, length: 10pt)
+    #draw_cube(oll-cube, length: 30pt)
     ```
   ],
 )
@@ -352,7 +353,7 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
         cube(),
         "F",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -365,7 +366,7 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
         cube(),
         "R",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -378,7 +379,7 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
         cube(),
         "U",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
 
@@ -392,7 +393,7 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
         cube(),
         "B",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -405,7 +406,7 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
         cube(),
         "L",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -418,7 +419,7 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
         cube(),
         "D",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
 )
@@ -457,7 +458,7 @@ The outermost layer has a depth of 1 and layer numbering always starts from the 
         cube(size: 4),
         "F",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -470,7 +471,7 @@ The outermost layer has a depth of 1 and layer numbering always starts from the 
         cube(size: 5),
         "2R",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 
@@ -484,7 +485,7 @@ The outermost layer has a depth of 1 and layer numbering always starts from the 
         cube(size: 4),
         "3U",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -497,7 +498,7 @@ The outermost layer has a depth of 1 and layer numbering always starts from the 
         cube(size: 4),
         "2D",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 )
@@ -526,7 +527,7 @@ The central layers have a special notation:
         cube(),
         "M",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -539,7 +540,7 @@ The central layers have a special notation:
         cube(),
         "E",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -552,7 +553,7 @@ The central layers have a special notation:
         cube(),
         "S",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
 )
@@ -593,7 +594,7 @@ For example, *3f* (or *3Fw*) rotates the first three front layers.
         cube(),
         "f",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -606,7 +607,7 @@ For example, *3f* (or *3Fw*) rotates the first three front layers.
         cube(size: 4),
         "r",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
   example(side-by-side: true)[
@@ -619,7 +620,7 @@ For example, *3f* (or *3Fw*) rotates the first three front layers.
         cube(size: 5),
         "4u",
       ),
-      length: 12pt,
+      length: 36pt,
     )
   ],
 )
@@ -643,7 +644,7 @@ To do so, write the first and last layers before the move separated with a dash.
         cube(size: 4),
         "2-3l",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -656,7 +657,7 @@ To do so, write the first and last layers before the move separated with a dash.
         cube(size: 6),
         "2-4r",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 )
@@ -685,7 +686,7 @@ This movements do not alter the state of the cube, just the point of view.
   ][
     #draw_cube(
       cube(),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -698,7 +699,7 @@ This movements do not alter the state of the cube, just the point of view.
         cube(),
         "x",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 
@@ -712,7 +713,7 @@ This movements do not alter the state of the cube, just the point of view.
         cube(),
         "y",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -725,7 +726,7 @@ This movements do not alter the state of the cube, just the point of view.
         cube(),
         "z",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 )
@@ -753,7 +754,7 @@ These modifiers can be applied to any notation described above.
         cube(),
         "R'",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -766,7 +767,7 @@ These modifiers can be applied to any notation described above.
         cube(size: 4),
         "2F2",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 
@@ -780,7 +781,7 @@ These modifiers can be applied to any notation described above.
         cube(size: 4),
         "3Rw'",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
   example(side-by-side: true)[
@@ -793,7 +794,7 @@ These modifiers can be applied to any notation described above.
         cube(size: 2),
         "x2",
       ),
-      length: 15pt,
+      length: 45pt,
     )
   ],
 )
@@ -807,9 +808,9 @@ These modifiers can be applied to any notation described above.
 
 === @type:cube
 
-@type:cube is the main type in this package, as it represents the state of a cube.
-However, you should not create or modify instances manually, as functions such as @cmd:draw_cube require the cube to be in a consistent state.
-Instead, use @cmd:cube to create instances and `parse` to manipulate them. // TODO: add @cmd:parse reference
+@type:cube represents the complete state of a Rubik's cube, it it the main element in this package.
+However, you should not create or modify instances manually, as functions such as @cmd:draw_cube require the cube to be in a valid, consistent state.
+Instead, use @cmd:cube to create instances and @cmd:apply to manipulate them.
 
 #frame(
   schema("cube", z.dictionary((
@@ -821,7 +822,7 @@ Instead, use @cmd:cube to create instances and `parse` to manipulate them. // TO
     l: z.array(z.color(), default: none),
     d: z.array(z.color(), default: none),
   ))),
-  [The length of the dictionaries must be equal to the square of the size.],
+  [Each array must contain $#arg[size]^2$ elements.],
 )
 
 === @type:cube-colors
@@ -836,12 +837,15 @@ This type is used when creating a cube to specify the color of each face.
     l: z.color(),
     d: z.color(),
   ))),
-  [Not all keys neet to be present for a valid @type:cube-colors element.],
+  [Not all keys need to be present for a valid @type:cube-colors value.],
 )
+
+#pagebreak(weak: true)
 
 === @type:cube-state
 
-This type is used when creating a cube to specify the pieces of each face.
+This type is used when creating a cube to specify the color of the stickers for each face.
+All the arrays must have the same length and it must be equal to the square of the size of the cube.
 #frame(
   schema("cube-state", color: green.lighten(60%), z.dictionary((
     f: z.array(z.color(), default: none),
@@ -851,7 +855,7 @@ This type is used when creating a cube to specify the pieces of each face.
     l: z.array(z.color(), default: none),
     d: z.array(z.color(), default: none),
   ))),
-  [Not all keys need to be present for a valid @type:cube-state element.],
+  [Not all keys need to be present for a valid @type:cube-state value.],
 )
 
 

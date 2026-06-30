@@ -11,15 +11,17 @@
 /// This function creates a @type:cube given the size, colors, and/or state.
 /// This is the correct way to create @type:cube instances.
 ///
-/// The #arg[state] argument lets you specify all the pieces (colors) of a face.
-/// Note that if a face is specified with this argument, it must be fully specified, and the corresponding color given in #arg[colors] is not used.
+/// The #arg[state] argument lets you specify all the stickers on a face.
+/// Note that if a face is specified with this argument, it must be fully specified, and the corresponding entry in #arg[colors] is ignored.
+///
+/// #alert("warning")[For each face present in #arg[state], the corresponding value in #arg[colors] is ignored.]
 /// -> cube
 #let cube(
   /// The size of the cube.
   /// The default value is 3, i.e., a standard cube.
   /// -> int
   size: 3,
-  /// Colors of each face of the cube.
+  /// The colors assigned to each face.
   ///
   /// It must be a @type:cube-colors, although it does not need to contain all the keys.
   /// In that case, the default color value will be used.
@@ -39,7 +41,9 @@
   ///
   /// -> cube-colors | auto
   colors: auto,
-  /// The state of the cube, the default is the solved state.
+
+  /// The state of the cube.
+  /// By default, the cube is initialized in the solved state.
   /// See @sec:creating-cubes for more details and examples.
   /// -> cube-state | auto
   state: auto,

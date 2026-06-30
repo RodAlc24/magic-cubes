@@ -40,7 +40,7 @@
   return cube
 }
 
-/// Rotates a sinle layer of a cube.
+/// Returns a new @type:cube with one layer rotated.
 ///
 /// It returns the cube after applying the rotation.
 /// It is used for applying the 1-layer rotations explained in @sec:1-layer.
@@ -50,13 +50,13 @@
   /// -> cube
   cube,
 
-  /// The layer to rotate, must be one of `("f", "r", "u", "b", "l", "d")`.
+  /// The face that defines the layer to rotate, must be one of `("f", "r", "u", "b", "l", "d")`.
   /// -> str
-  index,
+  face,
 
   /// The depth of the layer to rotate, by default 1, i.e., the outermost face.
   ///
-  /// It cannot be greater or equal the size of the cube.
+  /// It must be smaller than the cube size.
   /// -> int
   depth: 1,
 
@@ -66,7 +66,7 @@
 ) = {
   let size = cube.size
   assert(
-    index in ("f", "r", "u", "b", "l", "d"),
+    face in ("f", "r", "u", "b", "l", "d"),
     message: "Invalid index. Expected one of (\"f\", \"r\", \"u\", \"b\", \"l\", \"d\")",
   )
 
@@ -94,41 +94,42 @@
     d: ("f", "r", "b", "l"),
   )
 
-  for i in prepare.at(index).pairs() {
+  for i in prepare.at(face).pairs() {
     cube = _rotate_face(cube, i.first(), n: i.last())
   }
 
   let copy = cube
   for j in range(size) {
     for i in range(4) {
-      copy.at(moves.at(index).at(i)).at(j + size * depth) = cube
-        .at(moves.at(index).at(i - n))
+      copy.at(moves.at(face).at(i)).at(j + size * depth) = cube
+        .at(moves.at(face).at(i - n))
         .at(j + size * depth)
     }
   }
 
   cube = copy
-  for i in prepare.at(index).pairs() {
+  for i in prepare.at(face).pairs() {
     cube = _rotate_face(cube, i.first(), n: -i.last())
   }
 
   if depth == 0 {
-    return _rotate_face(cube, index, n: n)
+    return _rotate_face(cube, face, n: n)
   } else {
     return cube
   }
 }
 
-/// Rotates a cube.
+/// Returns a new @type:cube rotated.
 ///
 /// It returns the cube after applying the rotation.
-/// It is used for applyng the rotations explained in @sec:cube-rotations.
+/// It is used for applying the rotations explained in @sec:cube-rotations.
+/// -> cube
 #let rotate_cube(
   /// The cube to apply the rotation.
   /// -> cube
   cube,
 
-  /// The axis that will follow the rotation.
+  /// The axis around which the cube is rotated.
   /// Must be one of `("x", "y", "z")`.
   /// -> str
   axis,
