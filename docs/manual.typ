@@ -893,8 +893,10 @@ All the arrays must have the same length and it must be equal to the square of t
     read("../src/moves.typ"),
     read("../src/render.typ"),
     read("../src/cube.typ"),
+    read("../src/presets.typ"),
   ).join("\n"),
   omit-private-definitions: true,
+  omit-private-parameters: true,
 )
 // }}}
 
