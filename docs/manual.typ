@@ -430,13 +430,6 @@ To do so, precede the letter with the depth of the layer.
 The outermost layer has a depth of 1 and layer numbering always starts from the referenced face.
 
 #alert(
-  "info",
-)[
-  It is not necessary to specify the depth for the moves of the outermost layer.
-  For example, 1U is equivalent to U in all cubes.
-]
-
-#alert(
   "warning",
 )[
   The maximum depth is the cube size minus 1.
@@ -503,6 +496,14 @@ The outermost layer has a depth of 1 and layer numbering always starts from the 
   ],
 )
 // }}}
+
+#alert(
+  "info",
+)[
+  It is not necessary to specify the depth for the moves of the outermost layer.
+  For example, 1U is equivalent to U in all cubes.
+]
+
 // }}}
 
 == Central moves // {{{
@@ -841,8 +842,9 @@ Instead, use @cmd:cube to create instances and @cmd:apply to manipulate them.
     l: z.array(z.color(), default: none),
     d: z.array(z.color(), default: none),
   ))),
-  [Each array must contain $#arg[size]^2$ elements.],
 )
+
+#alert("warning")[Each array must contain $#arg[size]^2$ elements.]
 
 #pagebreak()
 
@@ -858,8 +860,10 @@ This type is used when creating a cube to specify the color of each face.
     l: z.color(),
     d: z.color(),
   ))),
-  [Not all keys need to be present for a valid @type:cube-colors value.],
 )
+#alert(
+  "info",
+)[Not all keys need to be present for a valid @type:cube-colors value.]
 
 === @type:cube-stickers
 
@@ -874,9 +878,11 @@ All the arrays must have the same length and it must be equal to the square of t
     l: z.array(z.color(), default: none),
     d: z.array(z.color(), default: none),
   ))),
-  [Not all keys need to be present for a valid @type:cube-stickers value.],
 )
 
+#alert(
+  "info",
+)[Not all keys need to be present for a valid @type:cube-stickers value.]
 
 == Functions
 

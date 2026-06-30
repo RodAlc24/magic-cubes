@@ -175,7 +175,7 @@
   /// The face to display.
   ///
   /// It must be one of `("f", "r", "u", "b", "l", "d")`.
-  /// -> str
+  /// -> face
   face,
 
   /// The face that will be displayed above the main face.
@@ -185,8 +185,8 @@
   /// - For `"u"`: `"b"`.
   /// - For `"d"`: `"f"`.
   ///
-  /// Valid values are #typ.t.auto and any face except the selected in #arg[face] and its opposite.
-  /// -> str | auto
+  /// Valid values are #typ.t.auto and any @type:face except the selected in #arg[face] and its opposite.
+  /// -> face | auto
   up-face: auto,
 
   /// The length of the side of the cube.

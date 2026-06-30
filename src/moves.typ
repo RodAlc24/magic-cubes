@@ -51,7 +51,7 @@
   cube,
 
   /// The face that defines the layer to rotate, must be one of `("f", "r", "u", "b", "l", "d")`.
-  /// -> str
+  /// -> face
   face,
 
   /// The depth of the layer to rotate, by default 1, i.e., the outermost face.
