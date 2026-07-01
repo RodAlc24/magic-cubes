@@ -9,7 +9,7 @@
 )
 
 /// This function creates a @type:cube given the size, colors, and/or stickers.
-/// This is the correct way to create @type:cube instances.
+/// This is the correct way to create @type:cube objects.
 ///
 /// The #arg[stickers] argument lets you specify all the stickers on a face.
 /// Note that if a face is specified with this argument, it must be fully specified, and the corresponding entry in #arg[colors] is ignored.
@@ -23,7 +23,7 @@
   size: 3,
   /// The colors assigned to each face.
   ///
-  /// It must be a @type:cube-colors, although it does not need to contain all the keys.
+  /// It must be a @type:face-colors, although it does not need to contain all the keys.
   /// In that case, the default color value will be used.
   ///
   /// The default values for each face are:
@@ -39,7 +39,7 @@
   ///)
   ///")
   ///
-  /// -> cube-colors | auto
+  /// -> face-colors | auto
   colors: auto,
 
   /// The stickers of the cube.

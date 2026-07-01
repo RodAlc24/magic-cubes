@@ -19,17 +19,23 @@
         row-gutter: 0.5cm,
         align: center + horizon,
         figure(
-          draw_cube(apply(
-            cube(),
-            //   "U' L' U' F' R2 B' R F U B2 U B' L U' F U R F'",
-            "y' R2 B2 F2 D R2 D2 R2 B2 L D F' L' F' D2 L B2 U' F' U R",
-          )),
+          draw_cube(
+            apply(
+              cube(),
+              "U' L' U' F' R2 B' R F U B2 U B' L U' F U R F'",
+              //"y' R2 B2 F2 D R2 D2 R2 B2 L D F' L' F' D2 L B2 U' F' U R",
+            ),
+            length: 50pt,
+          ),
         ),
         figure(
-          draw_cube(apply(
-            cube(size: 4),
-            "F U2 L F L' B L U B' R' L' U R' D' F' B R2",
-          )),
+          draw_cube(
+            apply(
+              cube(size: 4),
+              "F U2 L F L' B L U B' R' L' U R' D' F' B R2",
+            ),
+            length: 50pt,
+          ),
         ),
 
         "U' L' U' F' R2 B' R F U B2 U B' L U' F U R F'",
@@ -51,6 +57,59 @@
 #show "magic-cubes": package
 #show "CeTZ": package
 // }}}
+
+= Introduction
+
+In 1974, Ernő Rubik invented a mechanical puzzle and called it the _Magic Cube_.
+Years later, in 1980, the puzzle was renamed the _Rubik's Cube_, the name by which it is now known.
+Today, it is considered to be the world's bestselling puzzle game.
+
+magic-cubes is a package built on top of CeTZ that allows you to create, manipulate, and render Rubik's cubes of any size.
+
+== Terminology
+
+/ Algorithm: A sequence of moves written using standard cube notation.
+/ Face: One of the six flat sides of the cube. In a solved cube, all stickers on a face have the same color.
+/ Layer: A physical slice of the cube. It can contain a face (depth equal to 1) or not (depth greater than 1).
+/ Depth: The position of a layer measured from a given face. The outermost layer has depth 1.
+/ Size (of a cube): The number of stickers on each edge. A standard 3x3x3 cube has a size of 3.
+/ Sticker: One of the colored pieces on the cube. Each face on a 3x3x3 cube has 9 stickers.
+
+#alert("info")[
+  All code of this package was written by a human, no AI tools were used.
+
+  The documentation was also written by a human, and reviewed by AI.
+]
+
+= Quick Start
+
+To start using magic-cubes, add the following import at the top of your `.typ` file:
+#show-import(name: "magic-cubes")
+
+Creating and rendering a solved cube only requires two functions:
+
+```side-by-side
+#draw_cube(cube())
+```
+
+You can apply an algorithm before rendering the cube:
+
+```side-by-side
+#draw_cube(
+  apply(
+    cube(),
+    "R U R' U'"
+  )
+)
+```
+
+The package supports cubes of arbitrary size:
+
+```side-by-side
+#draw_cube(
+  cube(size: 5)
+)
+```
 
 = Examples // {{{
 
@@ -82,7 +141,7 @@
       apply(
         f2l-cube,
         "R2 U R2 U R2 U2 R2",
-        inverted: true,
+        inverse: true,
       )
     )
     ```
@@ -111,7 +170,7 @@
     #draw_face(
       cube(),
       "f",
-      up-face: "r"
+      top-face: "r"
     )
     ```
   ],
@@ -122,7 +181,7 @@
       cube(),
       "f",
       length: 84pt,
-      lateral-faces: false
+      adjacent-faces: false
     )
     ```
   ],
@@ -173,7 +232,7 @@
     cube(
       size: 6
     ),
-    inverted: true,
+    inverse: true,
     "2U 2-5r"
   ),
 )
@@ -223,7 +282,7 @@
     ```example
     #draw_pll(
       "(R U' R' U) d (R' U' R U') (R' U R)",
-      lateral-faces: true,
+      adjacent-faces: true,
       arrows: false
     )
     ```
@@ -231,17 +290,22 @@
 )
 // }}}
 
-= Guide // {{{
+= User Guide // {{{
+
+== Importing the package
+
+To start using magic-cubes, add the following import at the top of your `.typ` file:
+#show-import(name: "magic-cubes")
 
 == Creating cubes // {{{
 <sec:creating-cubes>
 
-A cube is represented as a dictionary, and can be easily created with the @cmd:cube function.
-It should not be created or modified manually.
+A cube is represented internally as a dictionary, and can be easily created with the @cmd:cube function.
+It should not be created or modified directly.
 
 The size of the cube can be specified with the #arg[size] argument (default is 3).
 The face colors can be changed with the #arg[colors] argument, specifying the faces to change.
-The default colors are:
+The default face colors are:
 
 #frame(
   raw(
@@ -255,11 +319,11 @@ The default colors are:
 )
 ",
   ),
-  [This colors are the Typst #link("https://typst.app/docs/reference/visualize/color/#predefined-colors")[predefined colors].],
+  [These colors are the Typst #link("https://typst.app/docs/reference/visualize/color/#predefined-colors")[predefined colors].],
 )
 
-It is also possible to specify a face manually, in that case the corresponding value in #arg[colors] is ignored.
-When specifying the colors manually, all the stickers in the face must be determined.
+It is also possible to specify the stickers of a face manually, in that case the corresponding value in #arg[colors] is ignored.
+When specifying the colors manually, all the stickers in the face must be specified.
 
 The order of the stickers in a face is the following:
 
@@ -268,7 +332,7 @@ The order of the stickers in a face is the following:
     // {{{
     let size = 3
     cetz.canvas(
-      length: 3 / size * 15pt,
+      length: 3 / size * 20pt,
       {
         import cetz.draw: content, rect
 
@@ -283,10 +347,10 @@ The order of the stickers in a face is the following:
               (j + 1 - k, size - i - 1 + k),
               box(
                 str(3 * i + j),
-                stroke: 0.3mm + red,
+                stroke: 0.5mm + red,
                 width: 100%,
                 height: 100%,
-                inset: 0.4em,
+                inset: 0.5em,
               ),
             )
             content(
@@ -294,10 +358,10 @@ The order of the stickers in a face is the following:
               (size + gap + j + 1 - k, size - i - 1 + k),
               box(
                 str(3 * i + j),
-                stroke: 0.3mm + blue,
+                stroke: 0.5mm + blue,
                 width: 100%,
                 height: 100%,
-                inset: 0.4em,
+                inset: 0.5em,
               ),
             )
             content(
@@ -305,10 +369,10 @@ The order of the stickers in a face is the following:
               (j + 1 - k, size + gap + size - i - 1 + k),
               box(
                 str(3 * i + j),
-                stroke: 0.3mm,
+                stroke: 0.5mm,
                 width: 100%,
                 height: 100%,
-                inset: 0.4em,
+                inset: 0.5em,
               ),
             )
             content(
@@ -316,10 +380,10 @@ The order of the stickers in a face is the following:
               (2 * (size + gap) + j + 1 - k, size - i - 1 + k),
               box(
                 str(3 * i + j),
-                stroke: 0.3mm + orange,
+                stroke: 0.5mm + orange,
                 width: 100%,
                 height: 100%,
-                inset: 0.4em,
+                inset: 0.5em,
               ),
             )
             content(
@@ -327,10 +391,10 @@ The order of the stickers in a face is the following:
               (-size - gap + j + 1 - k, size - i - 1 + k),
               box(
                 str(3 * i + j),
-                stroke: 0.3mm + green,
+                stroke: 0.5mm + green,
                 width: 100%,
                 height: 100%,
-                inset: 0.4em,
+                inset: 0.5em,
               ),
             )
             content(
@@ -338,10 +402,10 @@ The order of the stickers in a face is the following:
               (j + 1 - k, -size - gap + size - i - 1 + k),
               box(
                 str(3 * i + j),
-                stroke: 0.3mm + yellow,
+                stroke: 0.5mm + yellow,
                 width: 100%,
                 height: 100%,
-                inset: 0.4em,
+                inset: 0.5em,
               ),
             )
           }
@@ -351,19 +415,18 @@ The order of the stickers in a face is the following:
     // }}}
   },
   [
-    Each face is represented with the default color previously explained, except the up face that is in black.
+    Each face is shown using its default color described above, except for the upper face, which is shown in black.
   ],
 )
 
 #alert("info")[
   Note that this way of creating cubes may result in an impossible cube state (you can even use more than six colors!).
-  This can be useful, for example, to add a gray color to the non relevant pieces.
+  This can be useful, for example, to add a gray color to the non-relevant pieces.
 ]
 
-A similar order is used in other size cubes, for example, if we want to create a 2x2x2 cube with a custom color in front face and custom up and right faces we can do:
-```side-by-side
+A similar order is used in larger or smaller cubes, for example, if we want to create a 2x2x2 cube with a custom color on the front face and custom upper and right faces we can do:
+```example
 #draw_flat(
-  length: 45pt,
   cube(
     size: 2,
     colors: (f: maroon),
@@ -408,12 +471,12 @@ There are also some useful predefined cubes: #var[f2l-cube] and #var[oll-cube].
 #pagebreak()
 == Applying algorithms // {{{
 
-One of the main features of magic-cubes is the possibility to apply algorithms to the cubes.
-Algorithms are written following the standard notation that is fully documented on @sec:notation.
+One of the main features of magic-cubes is the ability to apply algorithms to the cubes.
+Algorithms are written following the standard notation that is fully documented in @sec:notation.
 
-The function @cmd:apply receives a cube and an algorithm as a #typ.t.str.
-It is also possible, through the #arg[inverted] argument to apply the inverse algorithm.
-This results in a cube that, after applying the specified algorithm, will result in the original cube.
+The function @cmd:apply takes a cube and an algorithm string.
+It is also possible, using  the #arg[inverse] argument to apply the inverse algorithm.
+This results in a cube that returns to the original state after applying the specified algorithm.
 
 #grid(
   columns: 2,
@@ -455,7 +518,7 @@ This results in a cube that, after applying the specified algorithm, will result
     #draw_cube(
       apply(
         f2l-cube,
-        inverted: true,
+        inverse: true,
         "U R U' R'"
       )
     )
@@ -464,7 +527,7 @@ This results in a cube that, after applying the specified algorithm, will result
 )
 
 #alert("info")[
-  There are also two alternative functions that lets you modify the cube: @cmd:rotate_layer and @cmd:rotate_cube.
+  There are also two alternative functions that let you modify the cube: @cmd:rotate_layer and @cmd:rotate_cube.
 ]
 
 #grid(
@@ -478,7 +541,7 @@ This results in a cube that, after applying the specified algorithm, will result
         cube(size: 4),
         "r",
         depth: 2,
-        n: 2
+        turns: 2
       )
     )
     ```
@@ -497,13 +560,13 @@ This results in a cube that, after applying the specified algorithm, will result
 
 // }}}
 
-== Rendering cubes // {{{
+== Rendering // {{{
 
-=== Flat representation
+=== Flat view
 
 It is possible to get a full representation of the cube with @cmd:draw_flat.
-This function takes a @type:cube and draws its net.
-It also accepts a #arg[length] argument to change the length of each cube edge.
+This function takes a @type:cube and draws its unfolded net.
+It also accepts a #arg[length] argument to change the length of each face edge.
 
 ```example
 #draw_flat(cube())
@@ -513,12 +576,12 @@ The faces are displayed in the standard cube net layout.
 The center row contains the left, front, right and back faces.
 The upper face is placed above the front face, and the down face is placed below it.
 
-=== 3D cube
+=== 3D view
 
-Another option is to draw a three-dimensional representation of the cube.
+You can also draw a three-dimensional representation of the cube.
 This is done with @cmd:draw_cube.
 
-Apart from the #arg[cube] and #arg[length] arguments, which behave the same as in @cmd:draw_flat, it also accepts #arg[x], #arg[y] and #arg[z] arguments to customize the cube orientation.
+Apart from the #arg[cube] and #arg[length] arguments, which behave the same as in @cmd:draw_flat, it also accepts #arg[x], #arg[y] and #arg[z] arguments to customize the cube's orientation.
 By default, the cube is drawn in an isometric projection.
 
 #grid(
@@ -545,7 +608,7 @@ By default, the cube is drawn in an isometric projection.
 
 === Face view
 
-The third type of representation is achieved with @cmd:draw_face.
+The third rendering mode is achieved with @cmd:draw_face.
 This draws a single face, optionally including the first row of the adjacent faces.
 This view is commonly used to illustrate Orientation of the Last Layer (OLL) and Permutation of the Last Layer (PLL) algorithms.
 
@@ -559,7 +622,7 @@ This view is commonly used to illustrate Orientation of the Last Layer (OLL) and
       apply(
         oll-cube,
         "F R U R' U' F'",
-        inverted: true
+        inverse: true
       ),
       "u"
     )
@@ -573,14 +636,14 @@ This view is commonly used to illustrate Orientation of the Last Layer (OLL) and
         "M2 E2 S2"
       ),
       "u",
-      lateral-faces: false
+      adjacent-faces: false
     )
     ```
   ],
 )
 
-In addition to the face to display, you may also specify the face that will be displayed on the top to control the orientation of the cube.
-This argument defaults to #typ.t.auto, which means that the #arg[up-face] will take the value of `"u"` if #arg[face] is set to `"f"`, `"r"`, `"b"` or `"l"`; `"f"` if #arg[face] is `"d"` and `"b"` if #arg[face] is `"u"`.
+In addition to the face to display, you may also specify the face displayed at the top to control the orientation of the cube.
+This argument defaults to #typ.t.auto, which means that the #arg[top-face] will take the value of `"u"` if #arg[face] is set to `"f"`, `"r"`, `"b"` or `"l"`; `"f"` if #arg[face] is `"d"` and `"b"` if #arg[face] is `"u"`.
 
 #grid(
   columns: 2,
@@ -592,7 +655,7 @@ This argument defaults to #typ.t.auto, which means that the #arg[up-face] will t
       apply(
         cube(),
         "F R l U' R2",
-        inverted: true
+        inverse: true
       ),
       "u"
     )
@@ -604,22 +667,20 @@ This argument defaults to #typ.t.auto, which means that the #arg[up-face] will t
       apply(
         cube(),
         "F R l U' R2",
-        inverted: true
+        inverse: true
       ),
       "u",
-      up-face: "r"
+      top-face: "r"
     )
     ```
   ],
 )
 
-// TODO: Document arrows
-#pagebreak()
-=== Other views
+=== Specialized views
 
-The package also provides three specialized rendering functions.
+The package also provides three convenience rendering functions.
 These functions are convenience wrappers around the rendering functions described above.
-They take an algorithm, applies it to the cube, and displays the algorithm below the rendered cube.
+They take an algorithm, applies it to a predefined cube, and displays both the rendered cube and the algorithm.
 
 #alert(
   "info",
@@ -701,23 +762,23 @@ They take an algorithm, applies it to the cube, and displays the algorithm below
 
 #alert(
   "error",
-)[Arrows are a experimental feature for @cmd:draw_face and will improve in a future release.]
+)[Arrows are an experimental feature for @cmd:draw_face and will improve in a future release.]
 // }}}
 // }}}
 
 = Cube notation // {{{
 <sec:notation>
 
-Algorithms are written as a string, consisting of a sequence of moves separated by spaces.
+Algorithms are represented as strings, consisting of a sequence of moves separated by spaces.
 These moves may represent rotations of one or more layers, or even of the entire cube.
 
-Parenthesis may also be used for clarification, they are ignored by the parser.
+Parentheses may also be used for clarification, they are ignored by the parser.
 Any other character that is not part of the valid notation will cause an error.
 
-== 1-layer moves // {{{
+== Single-layer moves // {{{
 <sec:1-layer>
 
-The basic moves are represented with one uppercase letter.
+The basic moves are represented with a single uppercase letter.
 There are six moves, one for each face of the cube: *F* (front), *R* (right), *U* (upper), *B* (back), *L* (left) and *D* (down).
 Each represents a single clockwise rotation.
 Double and counterclockwise rotations are explained in @sec:modifiers.
@@ -810,13 +871,13 @@ Double and counterclockwise rotations are explained in @sec:modifiers.
 // }}}
 
 It is also possible to move an inner layer.
-To do so, precede the letter with the depth of the layer.
+To do so, prefix the letter with the depth of the layer.
 The outermost layer has a depth of 1 and layer numbering always starts from the referenced face.
 
 #alert(
   "warning",
 )[
-  The maximum depth is the cube size minus 1.
+  The maximum depth is one less than the cube size.
   If you want to rotate the opposite face use the corresponding notation, i.e., in a 4x4x4 cube a 4F rotation is not allowed, the correct notation is B'.
 ]
 
@@ -1054,7 +1115,7 @@ To do so, write the first and last layers before the move separated with a dash.
 <sec:cube-rotations>
 
 For a complete cube rotation the letters *x*, *y* and *z* are used.
-This movements do not alter the state of the cube, just the point of view.
+These movements do not alter the cube's state, only the viewing orientation.
 
 - *x*: rotating the whole cube as if performing *R*.
 - *y*: rotating the whole cube as if performing *U*.
@@ -1123,7 +1184,7 @@ This movements do not alter the state of the cube, just the point of view.
 == Modifiers // {{{
 <sec:modifiers>
 
-Appending an apostrophe (*#sym.quote.single*) or a "*2*" to a move denotes an counterclockwise rotation or a double one (180º), respectively.
+Appending an apostrophe (*#sym.quote.single*) or a "*2*" to a move denotes a counterclockwise rotation or a double one (180º), respectively.
 These modifiers can be applied to any notation described above.
 
 // {{{
@@ -1189,7 +1250,7 @@ These modifiers can be applied to any notation described above.
 // }}}
 
 #alert("success")[
-  You can also use parenthesis for improving the legibility of the algorithms.
+  You can also use parenthesis for improving the readability of the algorithms.
   They will be ignored by the parser.
 ]
 
@@ -1282,7 +1343,7 @@ It accepts the following #typ.t.str values:
 
 === @type:cube
 
-@type:cube represents the complete state of a Rubik's cube, it it the main element in this package.
+@type:cube represents the complete state of a Rubik's cube, it is the main type in this package.
 However, you should not create or modify instances manually, as functions such as @cmd:draw_cube require the cube to be in a valid, consistent state.
 Instead, use @cmd:cube to create instances and @cmd:apply to manipulate them.
 
@@ -1302,11 +1363,11 @@ Instead, use @cmd:cube to create instances and @cmd:apply to manipulate them.
 
 #pagebreak()
 
-=== @type:cube-colors
+=== @type:face-colors
 
 This type is used when creating a cube to specify the color of each face.
 #frame(
-  schema("cube-colors", color: red.lighten(60%), z.dictionary((
+  schema("face-colors", color: red.lighten(60%), z.dictionary((
     f: z.color(),
     r: z.color(),
     u: z.color(),
@@ -1317,7 +1378,7 @@ This type is used when creating a cube to specify the color of each face.
 )
 #alert(
   "info",
-)[Not all keys need to be present for a valid @type:cube-colors value.]
+)[Not all keys need to be present for a valid @type:face-colors value.]
 
 === @type:cube-stickers
 
@@ -1339,7 +1400,7 @@ All the arrays must have the same length and it must be equal to the square of t
 )[Not all keys need to be present for a valid @type:cube-stickers value.]
 #show heading.where(level: 3): set heading(outlined: true)
 
-== Preset cubes
+== Predefined cubes
 #tidy-module(
   "Cube",
   (
@@ -1373,7 +1434,7 @@ All the arrays must have the same length and it must be equal to the square of t
   omit-private-parameters: true,
 )
 
-=== Render
+=== Rendering
 #tidy-module(
   "Cube",
   (

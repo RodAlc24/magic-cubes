@@ -40,7 +40,7 @@
   return cube
 }
 
-/// Returns a new @type:cube with one layer rotated.
+/// Returns a new @type:cube with the specified layer rotated.
 ///
 /// It returns the cube after applying the rotation.
 /// It is used for applying the 1-layer rotations explained in @sec:1-layer.
@@ -50,7 +50,7 @@
   /// -> cube
   cube,
 
-  /// The face that defines the layer to rotate, must be one of `("f", "r", "u", "b", "l", "d")`.
+  /// The @type:face used to identify the layer to rotate.
   /// -> face
   face,
 
@@ -62,7 +62,7 @@
 
   /// The number of rotations to apply, by default 1.
   /// -> int
-  n: 1,
+  turns: 1,
 ) = {
   let size = cube.size
   assert(
@@ -102,7 +102,7 @@
   for j in range(size) {
     for i in range(4) {
       copy.at(moves.at(face).at(i)).at(j + size * depth) = cube
-        .at(moves.at(face).at(i - n))
+        .at(moves.at(face).at(i - turns))
         .at(j + size * depth)
     }
   }
@@ -113,13 +113,13 @@
   }
 
   if depth == 0 {
-    return _rotate_face(cube, face, n: n)
+    return _rotate_face(cube, face, n: turns)
   } else {
     return cube
   }
 }
 
-/// Returns a new @type:cube rotated.
+/// Returns a new @type:cube with the specified rotation applied.
 ///
 /// It returns the cube after applying the rotation.
 /// It is used for applying the rotations explained in @sec:cube-rotations.

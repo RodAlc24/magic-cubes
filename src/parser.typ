@@ -131,16 +131,21 @@
   /// If true, the inverse of the algorithm is applied.
   /// This is useful when documenting solution algorithms, which are intended to solve the resulting cube.
   ///-> bool
-  inverted: false,
+  inverse: false,
 ) = {
   let list_alg = _parse(alg, cube.size)
-  if inverted {
+  if inverse {
     list_alg = _invert(list_alg)
   }
 
   for move in list_alg {
     if move.at(0) in ("f", "r", "u", "b", "l", "d") {
-      cube = rotate_layer(cube, move.at(0), depth: move.at(1), n: move.at(2))
+      cube = rotate_layer(
+        cube,
+        move.at(0),
+        depth: move.at(1),
+        turns: move.at(2),
+      )
     } else if move.at(0) in ("x", "y", "z") {
       for i in range(move.at(2)) {
         cube = rotate_cube(cube, move.at(0))

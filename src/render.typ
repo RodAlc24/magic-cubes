@@ -188,15 +188,15 @@
   ///
   /// Valid values are #typ.t.auto and any @type:face except the selected in #arg[face] and its opposite.
   /// -> face | auto
-  up-face: auto,
+  top-face: auto,
 
   /// The length of the side of the cube.
   /// -> length
   length: 60pt,
 
-  /// Whether lateral faces will appear or not.
+  /// Whether the adjacent faces are displayed.
   /// -> bool
-  lateral-faces: true,
+  adjacent-faces: true,
 
   /// TODO: docuemnt and publish this
   _arrows: none,
@@ -218,27 +218,27 @@
     d: (f: "x", r: "x z'", b: "x z2", l: "x z"),
   )
 
-  if up-face == auto {
+  if top-face == auto {
     if face == "u" {
-      up-face = "b"
+      top-face = "b"
     } else if face == "d" {
-      up-face = "f"
+      top-face = "f"
     } else {
-      up-face = "u"
+      top-face = "u"
     }
   }
 
-  if up-face != auto {
+  if top-face != auto {
     assert(
-      up-face in faces.at(face).keys(),
-      message: "Invalid argument (up-face): Must be one of the adjacent faces of argument face ("
+      top-face in faces.at(face).keys(),
+      message: "Invalid argument (top-face): Must be one of the adjacent faces of argument face ("
         + face
         + ") or auto. Got: "
-        + str(up-face),
+        + str(top-face),
     )
   }
 
-  cube = apply(cube, faces.at(face).at(up-face))
+  cube = apply(cube, faces.at(face).at(top-face))
 
   cetz.canvas(
     length: length / size,
@@ -266,7 +266,7 @@
           )
         }
       }
-      if lateral-faces {
+      if adjacent-faces {
         for i in range(size) {
           rect(
             (-size / 2 + i, size / 2 + height + gap),
@@ -298,8 +298,8 @@
   )
 }
 
-/// Draws a cube after applying the algorithm alongside with the algorithm.
-/// Default cube is #var[f2l-cube].
+/// Draws a cube after applying the algorithm alongside the algorithm.
+/// The default cube is #var[f2l-cube].
 #let draw_f2l(
   /// The algorithm to apply.
   /// -> str
@@ -324,7 +324,7 @@
         apply(
           cube,
           alg,
-          inverted: true,
+          inverse: true,
         ),
         length: length,
       ),
@@ -333,8 +333,8 @@
   )
 }
 
-/// Draws a face after applying the algorithm alongside with the algorithm.
-/// Default cube is #var[oll-cube].
+/// Draws a face after applying the algorithm alongside the algorithm.
+/// The default cube is #var[oll-cube].
 #let draw_oll(
   /// The algorithm to apply.
   /// -> str
@@ -359,7 +359,7 @@
         apply(
           cube,
           alg,
-          inverted: true,
+          inverse: true,
         ),
         length: length,
         "u",
@@ -369,9 +369,9 @@
   )
 }
 
-/// Draws a face after applying the algorithm alongside with the algorithm.
+/// Draws a face after applying the algorithm alongside the algorithm.
 /// It may also show arrows with the movement of the pieces on the upper face.
-/// Default cube is #var[oll-cube].
+/// The default cube is #var[oll-cube].
 #let draw_pll(
   /// The algorithm to apply.
   /// -> str
@@ -381,12 +381,12 @@
   /// -> cube
   cube: solved-cube,
 
-  /// Whether to show or not the lateral faces.
+  /// Whether to show or not the adjacent faces.
   /// See @cmd:draw_face
   /// -> bool
-  lateral-faces: false,
+  adjacent-faces: false,
 
-  /// Whether to show or not arrows representing the moves.
+  /// Whether to display arrows representing the moves.
   /// -> bool
   arrows: true,
 
@@ -430,10 +430,10 @@
         apply(
           cube,
           alg,
-          inverted: true,
+          inverse: true,
         ),
         length: length,
-        lateral-faces: lateral-faces,
+        adjacent-faces: adjacent-faces,
         "u",
         _arrows: show-arrows,
       ),
