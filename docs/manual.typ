@@ -54,40 +54,181 @@
 
 = Examples // {{{
 
-```side-by-side
-#draw_cube(
-  apply(
-    cube(),
-    "F2 B2 R2 L2 U2 D2"
-  )
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        cube(),
+        "M2 E2 S2"
+      )
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_cube(
+      cube(size: 2)
+    )
+    ```
+  ],
+
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        f2l-cube,
+        "R2 U R2 U R2 U2 R2",
+        inverted: true,
+      )
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_cube(
+      apply(
+        cube(size: 4),
+        "R2 3R2 F2 3F2 R2 3R2"
+      )
+    )
+    ```
+  ],
+
+  [
+    ```side-by-side
+    #draw_face(
+      cube(),
+      "f"
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_face(
+      cube(),
+      "f",
+      up-face: "r"
+    )
+    ```
+  ],
+
+  [
+    ```side-by-side
+    #draw_face(
+      cube(),
+      "f",
+      length: 84pt,
+      lateral-faces: false
+    )
+    ```
+  ],
+  [
+    ```side-by-side
+    #draw_face(
+      apply(
+        cube(),
+        "M2 E2 S2"
+      ),
+      "u",
+    )
+    ```
+  ],
 )
-```
 
 ```side-by-side
 #draw_cube(
   apply(
-    cube(size: 4),
-    "R2 3R2 F2 3F2 R2 3R2"
+    cube(
+      colors: (
+        f: rgb("#ff69ba"),
+        r: rgb("#00ff00"),
+        u: rgb("#ffffff"),
+        b: rgb("#ff7900"),
+        l: rgb("#00ffff"),
+        d: rgb("#000000"),
+      )
+    ),
+    "M2 E2 S2"
   )
 )
 ```
-
-```side-by-side
-#draw_cube(
-  apply(
-    inverted: true,
-    f2l-cube,
-    "R2 U R2 U R2 U2 R2"
-  )
-)
-```
-#draw_flat(apply(cube(size: 6), "f r b u r f r u d b l f r l u r l u f z"))
-#draw_flat(rotate_cube(
-  apply(cube(), "f r b u r f r u d b l f r l u r l u f "),
+```example
+#draw_flat(
+  rotate_cube(
+    apply(
+      cube(),
+      "f r b u r f r u d b l f r l u r l u f "
+    ),
   "z",
-))
+  )
+),
+```
+```example
+#draw_flat(
+  apply(
+    cube(
+      size: 6
+    ),
+    inverted: true,
+    "2U 2-5r"
+  ),
+)
+```
+#grid(
+  columns: 2,
+  column-gutter: 2mm,
+  row-gutter: 2mm,
+  [
+    ```example
+    #draw_f2l(
+      "(R U2 R' U) (R U2 R' U) y' (R' U' R) y"
+    )
+    ```
+  ],
+  [
+    ```example
+    #draw_f2l(
+      "(R U' R' U) d (R' U' R U') (R' U R)"
+    )
+    ```
+  ],
 
-#draw_cube(cube(size: 3))
+  [
+    ```example
+    #draw_oll(
+      "(R U2 R' U') (R U R' U') (R U' R')"
+    )
+    ```
+  ],
+  [
+    ```example
+    #draw_oll(
+      "(r U R' U') (r' F R F')"
+    )
+    ```
+  ],
+
+  [
+    ```example
+    #draw_pll(
+      "(M2 U M2 U) (M' U2) (M2 U2) (M' U2)"
+    )
+    ```
+  ],
+  [
+    ```example
+    #draw_pll(
+      "(R U' R' U) d (R' U' R U') (R' U R)",
+      lateral-faces: true,
+      arrows: false
+    )
+    ```
+  ],
+)
 // }}}
 
 = Guide // {{{
