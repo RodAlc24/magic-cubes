@@ -11,21 +11,21 @@ See the [manual](https://github.com/rodAlc24/magic-cubes/releases/download/v0.1.
     <td style="background: white;">
       <a href="docs/examples/04.typ">
         <center>
-          <img src="docs/examples/04.svg" width="100%"/>
+          <img src="docs/examples/04.svg" width="100%" alt="example cube 04"/>
         </center>
       </a>
     </td>
     <td style="background: white;">
       <a href="docs/examples/05.typ">
         <center>
-          <img src="docs/examples/05.svg" width="100%"/>
+          <img src="docs/examples/05.svg" width="100%" alt="example cube 05"/>
         </center>
       </a>
     </td>
     <td style="background: white;">
       <a href="docs/examples/06.typ">
         <center>
-          <img src="docs/examples/06.svg" width="100%"/>
+          <img src="docs/examples/06.svg" width="100%" alt="example cube 06"/>
         </center>
       </a>
     </td>
@@ -34,21 +34,21 @@ See the [manual](https://github.com/rodAlc24/magic-cubes/releases/download/v0.1.
     <td style="background: white;">
       <a href="docs/examples/07.typ">
         <center>
-          <img src="docs/examples/07.svg" width="100%"/>
+          <img src="docs/examples/07.svg" width="100%" alt="example cube 07"/>
         </center>
       </a>
     </td>
     <td style="background: white;">
       <a href="docs/examples/08.typ">
         <center>
-          <img src="docs/examples/08.svg" width="100%"/>
+          <img src="docs/examples/08.svg" width="100%" alt="example cube 08"/>
         </center>
       </a>
     </td>
     <td style="background: white;">
       <a href="docs/examples/09.typ">
         <center>
-          <img src="docs/examples/09.svg" width="100%"/>
+          <img src="docs/examples/09.svg" width="100%" alt="example cube 09"/>
         </center>
       </a>
     </td>
@@ -57,14 +57,14 @@ See the [manual](https://github.com/rodAlc24/magic-cubes/releases/download/v0.1.
     <td style="background: white;">
       <a href="docs/examples/10.typ">
         <center>
-          <img src="docs/examples/10.svg" width="100%"/>
+          <img src="docs/examples/10.svg" width="100%" alt="example cube 10"/>
         </center>
       </a>
     </td>
     <td style="background: white;">
       <a href="docs/examples/11.typ">
         <center>
-          <img src="docs/examples/11.svg" width="100%"/>
+          <img src="docs/examples/11.svg" width="100%" alt="example cube 11"/>
         </center>
       </a>
     </td>
