@@ -2,7 +2,7 @@
 
 magic-cubes is a [Typst](https://typst.app) package built on top of [CeTZ](https://typst.app/universe/package/cetz/) that allows you to create, manipulate, and render Rubik’s cubes of any size.
 
-See the manual for documentation.
+See the [manual](https://github.com/rodAlc24/magic-cubes/releases/download/v0.1.0/manual.pdf) for documentation.
 
 ## Examples
 
