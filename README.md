@@ -82,7 +82,7 @@ To start using magic-cubes, add the following import at the top of your `.typ` f
 Creating and rendering a solved cube only requires two functions:
 
 ```typst
-#draw_cube(cube())
+#draw-cube(cube())
 ```
 
 ![draw cube](docs/examples/01.svg)
@@ -90,7 +90,7 @@ Creating and rendering a solved cube only requires two functions:
 You can apply an algorithm before rendering the cube:
 
 ```typst
-#draw_cube(
+#draw-cube(
   apply(
     cube(),
     "R U R' U'"
@@ -103,7 +103,7 @@ You can apply an algorithm before rendering the cube:
 The package supports cubes of arbitrary size:
 
 ```typst
-#draw_cube(
+#draw-cube(
   cube(size: 5)
 )
 ```
