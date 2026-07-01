@@ -281,7 +281,7 @@ The package supports cubes of arbitrary size:
   [
     ```example
     #draw_pll(
-      "(R U' R' U) d (R' U' R U') (R' U R)",
+      "R U' R U R U R U' R' U' R2",
       adjacent-faces: true,
       arrows: false
     )
