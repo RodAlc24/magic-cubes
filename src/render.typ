@@ -408,11 +408,16 @@
     alg,
   )
 
-  let arrows = ()
-  for (i, sticker) in initial_state.u.enumerate() {
-    if sticker != none and i != sticker {
-      arrows.push((i, sticker))
+  let show-arrows
+  if arrows {
+    show-arrows = ()
+    for (i, sticker) in initial_state.u.enumerate() {
+      if sticker != none and i != sticker {
+        show-arrows.push((i, sticker))
+      }
     }
+  } else {
+    show-arrows = none
   }
 
   box(
@@ -430,7 +435,7 @@
         length: length,
         lateral-faces: lateral-faces,
         "u",
-        _arrows: arrows,
+        _arrows: show-arrows,
       ),
       text(alg),
     ),
